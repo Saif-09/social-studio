@@ -1,0 +1,122 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+#stage{background:#0C0E1F}
+.tiers{position:absolute;left:44px;right:44px;top:890px}
+.row{position:relative;height:126px;margin-bottom:12px;display:flex;border-radius:22px;background:#191A33;overflow:hidden;transform-origin:50% 50%}
+.row .ring{position:absolute;inset:0;border-radius:22px;border:4px solid var(--c);opacity:0;pointer-events:none}
+.num{width:126px;flex:none;display:grid;place-items:center;background:var(--c);color:#14122A;font:900 74px/1 Poppins}
+.body{position:relative;flex:1;padding:0 28px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.sign{font:800 44px/1.1 Poppins;letter-spacing:-.02em;color:var(--cream);white-space:nowrap}
+.sign mark{background:none;color:var(--c)}
+.sub{font:600 29px/1.1 Poppins;color:var(--c);white-space:nowrap}
+.tease{position:absolute;left:28px;top:50%;translate:0 -50%;font:700 36px/1 Poppins;color:var(--soft);white-space:nowrap}
+.med{position:absolute;width:250px;height:250px;border-radius:50%;background:#191A33;border:7px solid var(--c);display:grid;place-items:center;box-shadow:0 0 80px var(--g)}
+.chip{width:118px;height:118px;border-radius:50%;background:#191A33;border:5px solid var(--mari);display:grid;place-items:center;font:900 66px/1 Poppins;color:var(--mari)}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script src="vo/reel05-timing.js"></script>
+<script>
+// Reel 05: "Shani Dev ke 5 ishaare", a tier list filled from 5 up to 1 (format from a viral
+// @astrobliss.co reel; our signs, script, art and design). Voice text in vo/reel05.txt.
+// T[i] is when voice line i starts (align.py). Shani: 1842 Navagraha painting (public domain).
+const T = window.TIMES || [0, 5.3, 10.4, 17.8, 25.9, 34.9, 44.6, 55.1, 61.1, 69];
+window.DURATION = T[9];
+backdrop(window.DURATION);
+
+// Shani's own colours: indigo glow instead of the usual marigold.
+scene(0, window.DURATION, () => `<div class="bg" style="position:absolute;left:-460px;top:-420px;width:2000px;height:2000px;background:radial-gradient(circle,rgba(88,96,230,.36),rgba(88,96,230,0) 55%)"></div>`,
+  (el, t) => ($(el, ".bg").style.transform = `translate(${Math.sin(t * 0.35) * 50}px,${Math.cos(t * 0.27) * 60}px)`), 1);
+
+const COL = { 1: "#8EDB5A", 2: "#D9E85E", 3: "#FFD166", 4: "#FFA14F", 5: "#FF6B6B" };
+const ROW = {
+  5: ["Har kaam *aakhri waqt* atakna", "Sabr ki pariksha"],
+  4: ["*Lohe ki cheezein* kharab", "Shanivar: lohe ka daan"],
+  3: ["Roz ghar par *kauva*", "Shanivar: kauve ko roti"],
+  2: ["Buzurg ya *kaam wale* dukhi", "Unki seva, Shani ki seva"],
+  1: ["Apne aap *anushasan*", "Shani ki kripa aa rahi hai"],
+};
+// Line that reveals each tier, and when its sign and its remedy appear (seconds into that line).
+const LINE = { 5: 2, 4: 3, 3: 4, 2: 5, 1: 6 };
+const AT = { 5: [1.3, 5.3], 4: [1.25, 5.4], 3: [1.3, 4.7], 2: [1.0, 6.1], 1: [1.6, 5.8] };
+
+// Medallion pictures, one per sign (viewBox 0 0 100 100).
+const S = 'fill="none" stroke="#FFF8E8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"';
+const ICON = {
+  5: `<path d="M30 14 H70 M30 86 H70" ${S}/><path d="M34 14 C34 38 50 42 50 50 C50 58 34 62 34 86 M66 14 C66 38 50 42 50 50 C50 58 66 62 66 86" ${S}/>
+      <path class="sand" d="M40 80 Q50 66 60 80 Z" fill="${COL[5]}"/><path d="M41 28 H59 L50 44 Z" fill="${COL[5]}" opacity=".8"/>`,
+  4: `<path d="M34 46 V32 a16 16 0 0 1 32 0 V46" ${S}/><rect x="24" y="46" width="52" height="40" rx="7" fill="#5A5F73" stroke="#FFF8E8" stroke-width="5"/>
+      <circle cx="50" cy="62" r="5" fill="#14122A"/><path d="M50 66 V75" stroke="#14122A" stroke-width="5" stroke-linecap="round"/>
+      ${[[33, 54, 4], [66, 78, 5], [62, 52, 3], [36, 79, 3.5], [70, 60, 2.5]].map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${COL[4]}"/>`).join("")}`,
+  3: `<path d="M10 70 L26 60 C30 48 42 40 54 40 L60 31 C64 26 71 26 75 30 L92 35 L76 39 C77 51 70 61 57 65 L42 68 L14 78 Z" fill="#0B0B12" stroke="#FFF8E8" stroke-width="3.5" stroke-linejoin="round"/>
+      <circle cx="69" cy="33" r="2.6" fill="#FFF8E8"/><path d="M46 70 L44 84 M54 67 L54 84" stroke="#FFF8E8" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M34 50 C42 52 50 50 56 46" stroke="#3A3A55" stroke-width="3" fill="none"/>
+      <path d="M22 86 H82" stroke="${COL[3]}" stroke-width="5" stroke-linecap="round"/><circle cx="72" cy="83" r="5" fill="${COL[3]}"/>`,
+  2: `<circle cx="34" cy="30" r="13" ${S}/><circle cx="66" cy="30" r="13" ${S}/><path d="M47 30 H53 M21 28 L12 24 M79 28 L88 24" ${S}/>
+      <path d="M44 94 V64 C44 52 58 48 63 58 C65 63 61 68 57 67" fill="none" stroke="${COL[2]}" stroke-width="7" stroke-linecap="round"/>`,
+  1: `<path d="M12 66 H88" ${S}/><path d="M26 66 A24 24 0 0 1 74 66 Z" fill="${COL[1]}"/>
+      ${[-80, -50, -20, 20, 50, 80].map((a) => { const r = (a - 90) * Math.PI / 180; return `<path d="M${50 + Math.cos(r) * 32} ${66 + Math.sin(r) * 32} L${50 + Math.cos(r) * 42} ${66 + Math.sin(r) * 42}" ${S}/>`; }).join("")}
+      <path d="M50 66 V8" ${S} opacity="0"/><path d="M24 78 H76 M34 88 H66" ${S} opacity=".55"/>`,
+};
+
+const tierHTML = [1, 2, 3, 4, 5].map((k) => `<div class="row r${k}" style="--c:${COL[k]}"><div class="ring"></div><div class="num">${k}</div>
+  <div class="body"><div class="sign">${tx(ROW[k][0])}</div><div class="sub">${ROW[k][1]}</div>${k === 1 ? `<div class="tease">Aakhri wala sabse khaas</div>` : ""}</div></div>`).join("");
+
+// Lines 0 to 7: Shani, the title and the tier list, filled from 5 up to 1.
+scene(T[0], T[8], () => `<img class="sh" src="${ART}shani.png" style="position:absolute;left:310px;top:140px;height:550px">
+  ${[1, 2, 3, 4, 5].map((k) => `<div class="med m${k}" style="--c:${COL[k]};--g:${COL[k]}55;left:${k % 2 ? 790 : 40}px;top:330px"><svg viewBox="0 0 100 100" width="170" height="170">${ICON[k]}</svg></div>`).join("")}
+  <div class="title d" style="position:absolute;left:0;right:0;top:726px;text-align:center;font-size:76px"><div class="ln"><span>Shani Dev ke <mark class="hl">5 ishaare</mark></span></div></div>
+  <div class="tiers">${tierHTML}</div>
+  <div class="ask" style="position:absolute;left:0;right:0;top:120px;text-align:center">
+    <div class="d" style="font-size:96px"><div class="ln"><span>Aapke saath</span></div><div class="ln"><span><mark>kitne</mark> ho rahe hain?</span></div></div>
+    <div style="display:flex;justify-content:center;gap:26px;margin-top:56px">${[0, 1, 2, 3, 4, 5].map((k) => `<div class="chip">${k}</div>`).join("")}</div></div>`,
+  (el, t, abs) => {
+    const sh = $(el, ".sh");
+    sh.style.opacity = pr(t, 0, 0.5) * (1 - 0.8 * pr(abs, T[7], T[7] + 0.4));
+    sh.style.transform = `translateY(${Math.sin(abs * 1.1) * 10}px) scale(${mix(1.18, 1, pr(t, 0, 1.2, E.expo))})`;
+    lines($(el, ".title"), t, 0.15);
+    $$(el, ".row").forEach((r, i) => {
+      const p = pr(t, 1.6 + (4 - i) * 0.12, 2.1 + (4 - i) * 0.12, E.expo);
+      r.style.opacity = pr(t, 1.6 + (4 - i) * 0.12, 1.75 + (4 - i) * 0.12);
+      r.style.translate = `${mix(-120, 0, p)}px 0`;
+    });
+    // Line 1: the empty number 1 row teases the ending.
+    const tease = $(el, ".tease");
+    tease.style.opacity = pr(abs, T[1] + 0.8, T[1] + 1.2) * (1 - pr(abs, T[6], T[6] + 0.3)) * (0.75 + 0.25 * Math.sin(abs * 6));
+    $(el, ".r1 .num").style.scale = abs > T[1] + 2 && abs < T[6] ? 1 + 0.06 * Math.max(0, Math.sin(abs * 6)) : 1;
+    for (const k of [5, 4, 3, 2, 1]) {
+      const a = T[LINE[k]], b = T[LINE[k] + 1], row = $(el, `.r${k}`), [s1, s2] = AT[k];
+      const on = abs >= a && abs < b;
+      const sg = pr(abs, a + s1, a + s1 + 0.45, E.expo);
+      $(row, ".sign").style.opacity = pr(abs, a + s1, a + s1 + 0.1);
+      $(row, ".sign").style.translate = `${mix(80, 0, sg)}px 0`;
+      $(row, ".sub").style.opacity = pr(abs, a + s2, a + s2 + 0.3);
+      $(row, ".sub").style.translate = `0 ${mix(14, 0, pr(abs, a + s2, a + s2 + 0.4, E.expo))}px`;
+      $(row, ".ring").style.opacity = on ? pr(abs, a, a + 0.2) * (1 - pr(abs, b - 0.2, b)) : 0;
+      row.style.scale = on ? mix(1, 1.035, pr(abs, a, a + 0.3, E.back)) : 1;
+      row.style.background = on ? "#23244A" : "#191A33";
+      $(row, ".num").style.filter = abs < a ? "saturate(.35) brightness(.7)" : "none";
+      const m = $(el, `.m${k}`);
+      m.style.opacity = on ? pr(abs, a + s1, a + s1 + 0.12) * (1 - pr(abs, b - 0.25, b)) : 0;
+      m.style.scale = mix(0.4, 1, pr(abs, a + s1, a + s1 + 0.4, E.back));
+      m.style.rotate = `${Math.sin(abs * 1.6) * 4}deg`;
+    }
+    // Line 7: how many of these? The title makes way for the question and the count chips.
+    const ask = $(el, ".ask");
+    ask.style.display = abs >= T[7] ? "block" : "none";
+    if (abs >= T[7]) { lines(ask, abs - T[7], 0.05); popIn(ask, ".chip", abs - T[7], [2.2, 2.3, 2.4, 2.5, 2.6, 2.7]); }
+    $(el, ".title").style.opacity = 1 - pr(abs, T[7], T[7] + 0.25);
+  });
+
+// Line 8: end card.
+scene(T[8], T[9], () => `<div style="position:absolute;inset:0;background:#0C0E1F;opacity:.9"></div>
+  <img class="e1" src="${ART}shani.png" style="position:absolute;left:330px;top:170px;height:490px">
+  <div style="position:absolute;left:0;right:0;top:720px;text-align:center">
+  <div class="e2 d" style="font-size:96px">Shani aapki kundli<br>mein <mark>kahan</mark> hain?</div>
+  <div class="e3" style="margin-top:56px"><span class="tag m" style="font-size:40px;letter-spacing:.02em;text-transform:none;padding:24px 38px 22px">Free mein dekho: yourbrand.com</span></div>
+  <div class="e4" style="margin-top:70px;display:flex;justify-content:center;align-items:center;gap:22px">${MARK(84)}<span style="font:700 44px/1 Poppins;color:var(--soft)">@yourbrand</span></div></div>`,
+  (el, t) => { popIn(el, ".e1, .e2, .e3, .e4", t, [0, 0.15, 1.6, 1.9], 0.85); $(el, ".e1").style.translate = `0 ${Math.sin(t * 1.1) * 10}px`; }, 50);
+</script></body></html>

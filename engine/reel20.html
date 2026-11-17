@@ -1,0 +1,87 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Tiro+Devanagari+Sanskrit&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+#stage{background:#170707}
+.av{position:absolute;border-radius:50%;overflow:hidden;background:#FFC72C}
+.av img{width:100%;height:100%;object-fit:cover}
+.rank{font:900 190px/1 Poppins;color:#FF5A3C;letter-spacing:-.04em;text-shadow:0 0 60px rgba(255,90,60,.6)}
+.nm{font:800 96px/1 Poppins;color:var(--cream);letter-spacing:-.02em}
+.nm .hi{font-family:'Tiro Devanagari Sanskrit',serif;font-weight:400;font-size:64px;color:var(--mari);margin-left:18px}
+.line{font:700 54px/1.15 Poppins;color:var(--cream)}
+.meter{position:absolute;left:110px;right:110px;top:1440px;height:64px;border-radius:999px;background:rgba(255,255,255,.08);border:3px solid rgba(255,120,80,.4);overflow:hidden}
+.meter .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#FFD166,#FF8A3C,#FF3C2E);border-radius:999px}
+.mini{position:absolute;width:74px;height:74px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,248,232,.25)}
+.mini img{width:100%;height:100%;object-fit:cover}
+.mini b{position:absolute;right:-2px;bottom:-4px;font:900 24px/1 Poppins;color:#fff;text-shadow:0 2px 6px #000}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script src="vo/reel20-timing.js"></script>
+<script>
+// Reel 20: quick-fire ranking, "Sabse zyada gussa kis rashi ko aata hai?" (12 to 1, playful; traits from
+// each rashi's lord and element). Voice text in vo/reel20.txt. Rashi portraits from the website (public/rashi).
+const T = window.TIMES;
+window.DURATION = T[T.length - 1];
+const R = window.RASHI_DIR || "art/rashi/";   // 12 sign images (<name>.webp), relative to the workspace
+// [rank, name, hindi, image, line] in the order spoken (12 first).
+const LIST = [
+  [12, "Meen", "मीन", "pisces", "Gussa aata hai, aansu ban ke nikal jaata hai"],
+  [11, "Tula", "तुला", "libra", "Shaanti pasand, behes se bachte hain"],
+  [10, "Kark", "कर्क", "cancer", "Chup ho jaate hain, par yaad rakhte hain"],
+  [9, "Kanya", "कन्या", "virgo", "Gussa kam, taane zyada"],
+  [8, "Vrishabh", "वृषभ", "taurus", "Der se aata hai, par aaye to toofan"],
+  [7, "Mithun", "मिथुन", "gemini", "Baaton se hi jeet lete hain"],
+  [6, "Kumbh", "कुंभ", "aquarius", "Thanda gussa, baat band"],
+  [5, "Makar", "मकर", "capricorn", "Andar hi andar ubalte hain"],
+  [4, "Dhanu", "धनु", "sagittarius", "Sach munh par bol dete hain"],
+  [3, "Simha", "सिंह", "leo", "Izzat pe baat aaye to dahaad"],
+  [2, "Vrishchik", "वृश्चिक", "scorpio", "Gussa bhi, aur badla bhi"],
+  [1, "Mesh", "मेष", "aries", "Mangal ki rashi: pal mein aag, pal mein shaant"],
+];
+// Embers.
+(() => {
+  let seed = 9; const r = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+  const P = Array.from({ length: 36 }, () => ({ x: r() * 1080, s: 0.6 + r() * 1.6, v: 50 + r() * 110, ph: r() * 20 }));
+  scene(0, window.DURATION, () => `<div class="glow" style="position:absolute;left:-400px;top:200px;width:1880px;height:1880px;background:radial-gradient(circle,rgba(255,70,40,.32),rgba(255,70,40,0) 55%)"></div>` + P.map(() => `<div class="em" style="position:absolute;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#FFB070,rgba(255,90,40,0) 70%)"></div>`).join(""),
+    (el, t) => { $$(el, ".em").forEach((n, i) => { const e = P[i]; n.style.transform = `translate(${e.x + Math.sin(t * 1.3 + e.ph) * 30}px,${1980 - ((t * e.v + e.ph * 100) % 2100)}px) scale(${e.s * 2.4})`; n.style.opacity = 0.3 + 0.3 * Math.sin(t * 4 + e.ph * 3); }); $(el, ".glow").style.opacity = 0.7 + 0.3 * Math.sin(t * 2); }, 1);
+})();
+backdrop(window.DURATION);
+
+// Line 0: the question, with all 12 faces circling.
+scene(T[0], T[1], () => `<div class="ring" style="position:absolute;left:540px;top:1060px">${LIST.map(([, , , im], i) => `<div class="av a${i}" style="width:170px;height:170px;margin:-85px 0 0 -85px;border:5px solid #FF8A3C"><img src="${R}${im}.webp"></div>`).join("")}</div>
+  <div class="q d" style="position:absolute;left:60px;right:60px;top:200px;text-align:center;font-size:104px"><div class="ln"><span>Sabse zyada</span></div><div class="ln"><span><mark class="hl" style="background:#FF3C2E;color:#fff">GUSSA</mark></span></div><div class="ln"><span>kis rashi ko?</span></div></div>`,
+  (el, t) => {
+    lines($(el, ".q"), t, 0.05);
+    LIST.forEach((_, i) => { const a = (i / 12) * Math.PI * 2 + t * 0.6, n = $(el, `.a${i}`); n.style.transform = `translate(${Math.cos(a) * 330}px,${Math.sin(a) * 330}px)`; n.style.opacity = pr(t, 0.2 + i * 0.05, 0.4 + i * 0.05); });
+  });
+
+// Lines 1 to 12: one rashi each, the meter rising, the order building at the bottom.
+const minis = () => LIST.map(([rk, , , im], i) => `<div class="mini m${i}" style="left:${48 + i * 83}px;top:1560px"><img src="${R}${im}.webp"><b>${rk}</b></div>`).join("");
+scene(T[1], T[13], () => `<div class="hdr d" style="position:absolute;left:0;right:0;top:110px;text-align:center;font-size:58px">Sabse zyada <span style="color:#FF5A3C">gussa</span>: 12 se 1</div>
+  ${LIST.map(([rk, nm, hi, im, ln], i) => `<div class="it i${i}" style="position:absolute;inset:0">
+    <div class="rank" style="position:absolute;left:70px;top:260px">#${rk}</div>
+    <div class="av" style="left:500px;top:250px;width:520px;height:520px;border:10px solid #FF8A3C;box-shadow:0 0 90px rgba(255,90,60,.55)"><img src="${R}${im}.webp"></div>
+    <div style="position:absolute;left:70px;right:70px;top:850px;text-align:center"><div class="nm">${nm}<span class="hi">${hi}</span></div><div class="line" style="margin-top:34px">${ln}</div></div></div>`).join("")}
+  <div class="meter"><div class="fill"></div></div><div style="position:absolute;left:110px;top:1380px;font:700 30px/1 Poppins;color:#FFB070;letter-spacing:.14em">GUSSA METER</div>${minis()}`,
+  (el, t, abs) => {
+    let on = 0; LIST.forEach((_, i) => { if (abs >= T[i + 1]) on = i; });
+    LIST.forEach((_, i) => {
+      const n = $(el, `.i${i}`), a = T[i + 1], show = i === on;
+      n.style.display = show ? "block" : "none";
+      if (show) { const p = pr(abs, a, a + 0.35, E.back); n.style.opacity = pr(abs, a, a + 0.12); n.style.transform = `scale(${mix(0.85, 1, p)})`; $(n, ".av").style.rotate = `${mix(-14, 0, p)}deg`; }
+      const m = $(el, `.m${i}`); m.style.opacity = abs >= a ? 1 : 0.12; m.style.borderColor = show ? "#FF5A3C" : ""; m.style.scale = show ? 1.18 : 1;
+    });
+    const lvl = (on + 1) / 12, prev = on / 12, a = T[on + 1];
+    $(el, ".fill").style.width = `${mix(prev, lvl, pr(abs, a, a + 0.6, E.out)) * 100}%`;
+    if (on === 11) $(el, ".i11 .av").style.translate = `${Math.sin(abs * 40) * 6 * pr(abs, a, a + 0.3)}px 0`;
+  });
+
+// Line 13: your rashi?
+scene(T[13], T[14], () => `<div class="d" style="position:absolute;left:60px;right:60px;top:220px;text-align:center;font-size:96px"><div class="ln"><span>Aapki rashi</span></div><div class="ln"><span>kaun se <mark>number</mark> par?</span></div></div>
+  <div style="position:absolute;left:90px;right:90px;top:560px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px 20px">${LIST.slice().reverse().map(([rk, nm, , im], i) => `<div class="g g${i}" style="text-align:center"><div style="position:relative;width:150px;height:150px;margin:0 auto;border-radius:50%;overflow:hidden;border:5px solid ${rk <= 3 ? "#FF3C2E" : "#FF8A3C"}"><img src="${R}${im}.webp" style="width:100%;height:100%;object-fit:cover"></div><div style="font:800 34px/1.2 Poppins;color:var(--cream);margin-top:10px">#${rk} ${nm}</div></div>`).join("")}</div>
+  <div class="cm" style="position:absolute;left:0;right:0;top:1500px;text-align:center"><span class="tag m" style="font-size:40px;letter-spacing:.02em;text-transform:none;padding:22px 36px 20px">Sahi ya galat? Comment karo</span></div>
+  <div class="hn" style="position:absolute;left:0;right:0;top:1620px;display:flex;justify-content:center;align-items:center;gap:20px">${MARK(70)}<span style="font:700 40px/1 Poppins;color:var(--soft)">@yourbrand</span></div>`,
+  (el, t) => { lines(el, t, 0.03); popIn(el, ".g", t, Array.from({ length: 12 }, (_, i) => 0.3 + i * 0.07), 0.6); popIn(el, ".cm, .hn", t, [2.0, 2.3], 0.8); }, 50);
+</script></body></html>

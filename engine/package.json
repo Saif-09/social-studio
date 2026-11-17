@@ -1,0 +1,1 @@
+{ "name": "reel-studio-engine", "private": true, "type": "module", "dependencies": { "playwright": "1.48.2" } }

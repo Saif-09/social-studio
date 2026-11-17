@@ -1,0 +1,252 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Amiri:wght@400;700&family=Amiri+Quran&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="capbig.css">
+<style>
+:root{--gold:#E8B45A;--parch:#F2E8D5;--ink:#0B0F1A}
+#stage{background:#04060B}
+.cam{position:absolute;inset:0;transform-origin:50% 40%}
+.abs{position:absolute;left:0;top:0}
+.bcap{font-size:64px;-webkit-text-stroke:10px rgba(5,7,11,.94);font-family:Poppins,Amiri,sans-serif}
+.bcap b{color:var(--gold)}
+.al{display:inline-block;font:700 1.22em/1 Amiri,serif;color:var(--gold);vertical-align:-0.06em;padding:0 .04em}
+.bcap .al,.hook .h1 .al{-webkit-text-stroke:7px rgba(5,7,11,.94);paint-order:stroke fill}
+.hook .h1{font-size:88px;-webkit-text-stroke:12px rgba(5,7,11,.95)}
+.hook .h1 b{color:var(--gold)}
+.hook .h2{background:var(--gold);color:var(--ink)}
+.chip{display:inline-block;font:700 32px/1 Poppins;color:var(--parch);padding:16px 28px 14px;border-radius:999px;border:2px solid rgba(232,180,90,.55);background:rgba(6,8,14,.66);white-space:nowrap}
+.chip b{color:var(--gold)}
+.arn{font:700 132px/1.25 Amiri,serif;color:var(--gold);direction:rtl;text-shadow:0 4px 0 rgba(0,0,0,.5),0 0 40px rgba(232,180,90,.25)}
+.hon{font:400 40px/1.3 Amiri,serif;color:#D9CDB3;direction:rtl;margin-top:-8px}
+.enn{font:800 64px/1 Poppins;color:var(--parch);letter-spacing:-.01em}
+.enn span{font:600 40px/1 Poppins;color:#A9B4B6;margin-left:14px}
+.btn{display:inline-block;background:var(--gold);color:var(--ink);font:800 52px/1 Poppins;padding:30px 64px 28px;border-radius:999px}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script src="vo/reel04-timing.js"></script>
+<script>
+// faith brand reel 04: the 25 prophets named in the Quran, each with one line from his Quran story.
+// Format from a viral @islaminsketches reel; our script, voice and art. No prophet is drawn: each card is his
+// name in Arabic, a symbol from the ayah (ark, fire, whale, parted sea...), and the ayah reference.
+const T = window.TIMES, CAPS = window.CAPS;
+window.DURATION = T[T.length - 1];
+const HANDLE = "@yourbrand";
+const NCH = [2, ...Array(24).fill(2), 3, 2];
+const FIRST = NCH.map((_, i) => NCH.slice(0, i).reduce((a, b) => a + b, 0));
+const cs = (l, k) => CAPS[FIRST[l] + k][0];
+const AL = (s) => s.replace(/\bAllah\b/g, `<span class="al">اللّٰه</span>`);
+const W = 1080, H = 1920, TAU = Math.PI * 2, G = "#E8B45A", PA = "#F2E8D5", SOFT = "rgba(232,180,90,.14)";
+const rng = (s) => () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+const f1 = (x) => (+x).toFixed(1);
+const ST = `fill="none" stroke="${G}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"`;
+const SF = `fill="${SOFT}" stroke="${G}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"`;
+const S = Math.sin, C = Math.cos;
+const lerpHex = (a, b, p) => { const h = (s) => [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16)); const x = h(a), y = h(b); return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * p).toString(16).padStart(2, "0")).join(""); };
+const star8 = (cx, cy, r, extra = "") => { let pts = []; for (let k = 0; k < 16; k++) { const a = k * Math.PI / 8 - Math.PI / 2, rr = k % 2 ? r * 0.62 : r; pts.push(`${f1(cx + rr * C(a))},${f1(cy + rr * S(a))}`); } return `<polygon points="${pts.join(" ")}" ${extra}/>`; };
+
+// ---------- the 25 ----------
+const P = [
+  ["Adam", "", "آدَم", "2:35", "tree", "#2E6B4F"],
+  ["Idris", "Enoch", "إِدْرِيس", "19:56-57", "peak", "#3A4A8A"],
+  ["Nuh", "Noah", "نُوح", "11:37", "ark", "#1E5A7A"],
+  ["Hud", "", "هُود", "69:6-7", "wind", "#5A4A6A"],
+  ["Salih", "", "صَالِح", "7:73", "camel", "#7A5A3A"],
+  ["Ibrahim", "Abraham", "إِبْرَاهِيم", "21:68-69", "fire", "#8A4A2A"],
+  ["Lut", "Lot", "لُوط", "11:82", "town", "#6A3A3A"],
+  ["Ismail", "Ishmael", "إِسْمَاعِيل", "37:102-107", "ram", "#6A5A3A"],
+  ["Ishaq", "Isaac", "إِسْحَاق", "11:71", "burst", "#7A6A3A"],
+  ["Yaqub", "Jacob", "يَعْقُوب", "19:49", "lineage", "#4A5A7A"],
+  ["Yusuf", "Joseph", "يُوسُف", "12:4", "dream", "#3A3A7A"],
+  ["Ayyub", "Job", "أَيُّوب", "21:83-84", "spring", "#2A6A6A"],
+  ["Shuaib", "", "شُعَيْب", "11:84", "scale", "#6A5A2A"],
+  ["Musa", "Moses", "مُوسَىٰ", "26:63", "sea", "#1A4A7A"],
+  ["Harun", "Aaron", "هَارُون", "20:29-30", "lanterns", "#7A5A2A"],
+  ["Dhul-Kifl", "", "ذُو ٱلْكِفْل", "21:85", "hourglass", "#5A4A3A"],
+  ["Dawud", "David", "دَاوُود", "2:251", "sling", "#6A4A2A"],
+  ["Sulaiman", "Solomon", "سُلَيْمَان", "27:16", "birds", "#2A5A6A"],
+  ["Ilyas", "Elijah", "إِلْيَاس", "37:123-125", "call", "#5A3A6A"],
+  ["Al-Yasa", "Elisha", "ٱلْيَسَع", "38:48", "star", "#3A4A7A"],
+  ["Yunus", "Jonah", "يُونُس", "21:87", "whale", "#123A5A"],
+  ["Zakariya", "Zechariah", "زَكَرِيَّا", "3:38-39", "mihrab", "#5A4A2A"],
+  ["Yahya", "John", "يَحْيَىٰ", "19:12", "book", "#6A5A3A"],
+  ["Isa", "Jesus", "عِيسَىٰ", "3:49", "claybird", "#3A5A6A"],
+  ["Muhammad", "", "مُحَمَّد", "33:40 · 21:107", "mercy", "#7A6A2A"],
+];
+
+// Symbols in a 200x200 box. p = progress through the card (0..1), t = seconds into it.
+const SYM = {
+  tree: (p, t) => `<path d="M40 172 H160" ${ST}/><g transform="rotate(${f1(S(t * 1.3) * 2)} 100 170)"><path d="M100 170 L100 112 M100 138 L80 120 M100 128 L122 110" ${ST}/>
+    <circle cx="100" cy="80" r="38" ${SF}/><circle cx="70" cy="100" r="24" ${SF}/><circle cx="131" cy="97" r="26" ${SF}/>
+    ${[[88, 70], [114, 88], [72, 104], [128, 76], [100, 100]].map(([x, y], k) => `<circle cx="${x}" cy="${y}" r="${f1(4.5 + S(t * 3 + k) * 0.8)}" fill="${G}"/>`).join("")}</g>`,
+  peak: (p, t) => `<path d="M24 168 L82 88 L106 120 L134 92 L178 168 Z" ${SF}/>${[0, 1, 2].map((k) => `<circle cx="${70 + k * 30}" cy="${f1(60 - k * 10 + S(t * 2 + k) * 3)}" r="2.5" fill="${PA}" opacity=".6"/>`).join("")}
+    ${star8(100, 84 - 52 * E.io(Math.min(1, p * 1.4)), 16, `fill="${G}"`)}<path d="M100 ${f1(102 - 52 * E.io(Math.min(1, p * 1.4)))} L100 120" stroke="${G}" stroke-width="3" stroke-dasharray="3 6" opacity=".6"/>`,
+  ark: (p, t) => { const b = S(t * 2.2) * 3; const wave = (y, o) => { let d = `M10 ${y}`; for (let x = 10; x <= 190; x += 10) d += ` L${x} ${f1(y + 5 * S(x / 14 + t * 3 + o))}`; return `<path d="${d}" ${ST}/>`; };
+    return `<g transform="translate(0 ${f1(b)}) rotate(${f1(S(t * 2.2) * 2)} 100 130)"><path d="M42 118 L158 118 L142 144 L58 144 Z" ${SF}/><path d="M74 118 V94 H126 V118 M68 94 L100 76 L132 94" ${ST}/><path d="M86 106 H92 M108 106 H114" ${ST}/></g>${wave(150, 0)}${wave(166, 2)}`; },
+  wind: (p, t) => `${[0, 1, 2].map((k) => `<path d="M${22 + k * 6} ${62 + k * 26} C${60} ${34 + k * 26} ${132} ${34 + k * 26} ${158 - k * 8} ${62 + k * 26} C${172 - k * 8} ${76 + k * 26} ${154 - k * 8} ${90 + k * 26} ${138 - k * 8} ${80 + k * 26}" ${ST} stroke-dasharray="46 18" stroke-dashoffset="${f1(-t * 70 - k * 20)}"/>`).join("")}
+    <path d="M30 170 L92 160 M112 172 L172 160" stroke="${G}" stroke-width="8" stroke-linecap="round" opacity=".7"/><path d="M28 176 H176" ${ST} opacity=".5"/>`,
+  camel: (p, t) => { const s = S(t * 4) * 7;
+    return `<path d="M30 172 H170" ${ST} opacity=".5"/><g transform="translate(${f1(-10 + 20 * p)} 0)"><path d="M60 128 L${f1(58 + s)} 168 M74 130 L${f1(76 - s)} 168 M118 130 L${f1(120 + s)} 168 M132 128 L${f1(130 - s)} 168" ${ST}/>
+      <path d="M52 124 C48 104 62 96 76 98 C84 66 116 66 122 98 C134 96 142 100 146 108 L150 88 C152 74 160 66 172 70 L180 74 L176 82 L164 82 L160 112 C158 126 140 132 126 132 L70 132 C60 132 54 130 52 124 Z" ${SF}/>
+      <path d="M52 118 Q44 124 46 136" ${ST}/></g>`; },
+  fire: (p, t) => { const k = pr(p, 0.35, 0.75, E.io), c1 = lerpHex("#FF8A2A", "#BFE6FF", k), c2 = lerpHex("#FFD36A", "#F4FBFF", k), fl = 1 + 0.05 * S(t * 12);
+    return `<path d="M58 168 L142 150 M58 150 L142 168" stroke="#6A4428" stroke-width="10" stroke-linecap="round"/>
+      <g transform="translate(100 160) scale(1 ${f1(fl)}) translate(-100 -160)"><path d="M100 160 C60 146 58 104 86 66 C88 90 98 96 104 92 C96 70 108 46 126 30 C122 62 148 84 146 118 C146 144 128 160 100 160 Z" fill="${c1}" opacity=".9"/>
+      <path d="M100 158 C82 150 80 128 94 108 C96 122 104 124 108 118 C112 132 118 144 112 152 C108 156 104 158 100 158 Z" fill="${c2}"/></g>
+      ${k > 0.2 ? [0, 1, 2, 3, 4].map((j) => `<circle cx="${f1(60 + j * 20 + S(t * 2 + j) * 6)}" cy="${f1(60 + ((t * 30 + j * 23) % 70))}" r="2.2" fill="#E8F6FF" opacity="${f1(k * 0.8)}"/>`).join("") : ""}`; },
+  town: (p, t) => { const r = pr(p, 0.3, 0.6, E.io) * 180;
+    const houses = [[40, 34, 40], [76, 30, 56], [108, 36, 44], [146, 28, 50]].map(([x, w, h]) => `<rect x="${x}" y="${120 - h}" width="${w}" height="${h}" ${SF}/><rect x="${x + w / 2 - 4}" y="${120 - h + 12}" width="8" height="12" fill="${G}" opacity=".6"/>`).join("");
+    return `<path d="M24 150 L176 150" ${ST} opacity=".5"/><g transform="rotate(${f1(r)} 100 104)">${houses}<path d="M34 120 H170" ${ST}/></g>
+      ${[0, 1, 2, 3, 4, 5].map((j) => `<circle cx="${30 + j * 28}" cy="${f1(((t * 140 + j * 37) % 190) - 20)}" r="4.5" fill="#B9A58A" opacity=".85"/>`).join("")}`; },
+  ram: (p, t) => `<path d="M30 170 H170" ${ST} opacity=".5"/><g transform="translate(0 ${f1(S(t * 2) * 1.5)})">
+    <path d="M58 132 L58 166 M76 136 L76 166 M122 136 L122 166 M140 132 L140 166" ${ST}/>
+    <path d="M46 116 C40 92 66 80 90 88 C110 78 138 82 148 100 C156 116 150 136 130 138 L66 140 C52 140 48 128 46 116 Z" ${SF}/>
+    <path d="M144 98 C150 84 168 80 174 92 C178 102 172 116 160 116 L150 112" ${SF}/>
+    <path d="M152 92 C140 74 120 82 126 96 C130 106 144 104 144 96" ${ST}/></g>${glow2(100, 40, 30)}`,
+  burst: (p, t) => `<g transform="rotate(${f1(t * 12)} 100 100)">${Array.from({ length: 16 }, (_, k) => { const a = k * TAU / 16, r1 = 40, r2 = 60 + 18 * pr(p, 0, 0.5, E.back) + (k % 2 ? -10 : 8); return `<path d="M${f1(100 + r1 * C(a))} ${f1(100 + r1 * S(a))} L${f1(100 + r2 * C(a))} ${f1(100 + r2 * S(a))}" ${ST}/>`; }).join("")}</g>
+    ${star8(100, 100, 30 + 4 * S(t * 3), `fill="${G}"`)}`,
+  lineage: (p, t) => { const n = [["Ibrahim", 44], ["Ishaq", 100], ["Yaqub", 156]];
+    return n.map(([nm, y], k) => { const on = pr(p, k * 0.18, k * 0.18 + 0.12); return `<g opacity="${f1(on)}">${k ? `<path d="M70 ${y - 40} V${y - 14}" ${ST}/>` : ""}<circle cx="70" cy="${y}" r="13" ${k === 2 ? `fill="${G}" stroke="${G}" stroke-width="4"` : SF}/>
+      <text x="96" y="${y + 8}" font-family="Poppins" font-weight="700" font-size="22" fill="${k === 2 ? G : PA}">${nm}</text></g>`; }).join(""); },
+  dream: (p, t) => { const bow = pr(p, 0.3, 0.7, E.io) * 10;
+    return `<circle cx="58" cy="56" r="20" fill="${G}"/><path d="M152 38 A22 22 0 1 0 152 78 A17 17 0 1 1 152 38 Z" fill="${PA}"/>
+      ${Array.from({ length: 11 }, (_, k) => { const a = Math.PI * (0.12 + 0.76 * k / 10), x = 100 - 78 * C(a), y = 150 - 52 * S(a) + 40; return `<g transform="rotate(${f1((x < 100 ? 1 : -1) * bow)} ${f1(x)} ${f1(y)})">${star8(x, y, 8, `fill="${G}" opacity="${f1(0.7 + 0.3 * S(t * 3 + k))}"`)}</g>`; }).join("")}`; },
+  spring: (p, t) => `<path d="M20 160 Q100 140 180 160" ${ST}/>${Array.from({ length: 9 }, (_, k) => { const ph = ((t * 0.9 + k / 9) % 1), x = 100 + (k % 2 ? 1 : -1) * ph * (18 + k * 3), y = 150 - 110 * ph * (1 - ph) * 3.2; return `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(5 - ph * 3)}" fill="#9FD8E8" opacity="${f1(1 - ph * 0.6)}"/>`; }).join("")}
+    <g transform="translate(150 152) scale(${f1(pr(p, 0.2, 0.8, E.out))})"><path d="M0 0 V-30 M0 -16 C-14 -24 -16 -34 -12 -40 C0 -36 2 -24 0 -16 M0 -24 C12 -32 18 -40 14 -46 C4 -44 0 -34 0 -24" ${ST}/></g>`,
+  scale: (p, t) => { const a = 16 * S(t * 3) * Math.exp(-t * 0.9);
+    return `<path d="M100 168 V56 M80 168 H120" ${ST}/><g transform="rotate(${f1(a)} 100 56)"><path d="M36 56 H164" ${ST}/>
+      <path d="M44 56 L30 110 M44 56 L58 110 M156 56 L142 110 M156 56 L170 110" ${ST} opacity=".8"/><path d="M24 110 Q44 128 64 110 Z M136 110 Q156 128 176 110 Z" ${SF}/></g><circle cx="100" cy="56" r="6" fill="${G}"/>`; },
+  sea: (p, t) => { const o = pr(p, 0.15, 0.55, E.io) * 46; const wall = (x0, x1, dir) => { let d = `M${f1(x0)} 168 L${f1(x0)} 50`; for (let k = 0; k <= 8; k++) { const x = x0 + (x1 - x0) * k / 8; d += ` L${f1(x)} ${f1(46 + 5 * S(k * 1.3 + t * 3 * dir))}`; } return `<path d="${d} L${f1(x1)} 168 Z" fill="rgba(110,170,220,.22)" stroke="#9FC8EC" stroke-width="4" stroke-linejoin="round"/>`; };
+    return `${wall(20, 100 - o, 1)}${wall(100 + o, 180, -1)}<path d="M${f1(100 - o * 0.6)} 168 L${f1(100 + o * 0.6)} 168" stroke="#D9C49A" stroke-width="6"/><path d="M100 ${f1(170 - 120 * pr(p, 0, 0.15))} V170" stroke="${G}" stroke-width="5" stroke-linecap="round" opacity="${f1(1 - pr(p, 0.5, 0.7))}"/>`; },
+  lanterns: (p, t) => { const L = (x, on) => `<path d="M${x} 20 V44" ${ST}/><path d="M${x - 10} 44 H${x + 10} L${x + 18} 64 L${x + 14} 120 H${x - 14} L${x - 18} 64 Z" ${SF}/><path d="M${x - 9} 64 H${x + 9} L${x + 7} 112 H${x - 7} Z" fill="#FFD68A" opacity="${f1(on)}"/><path d="M${x - 12} 120 H${x + 12} L${x + 6} 132 H${x - 6} Z" ${SF}/>`;
+    const on2 = pr(p, 0.4, 0.6); return `${glow2(70, 88, 34, 0.9)}${L(70, 0.85 + 0.15 * S(t * 7))}${on2 > 0 ? glow2(130, 88, 34, on2 * 0.9) : ""}${L(130, on2 * (0.85 + 0.15 * S(t * 6)))}<path d="M84 150 H116" ${ST} opacity=".5"/>`; },
+  hourglass: (p, t) => { const s = Math.min(1, p * 1.1);
+    return `<path d="M60 26 H140 M60 174 H140" ${ST}/><path d="M68 26 C68 76 98 86 98 100 C98 114 68 124 68 174 M132 26 C132 76 102 86 102 100 C102 114 132 124 132 174" ${ST}/>
+      <path d="M${f1(76 + 18 * s)} ${f1(46 + 30 * s)} L${f1(124 - 18 * s)} ${f1(46 + 30 * s)} L100 96 Z" fill="${G}" opacity=".85"/><path d="M${f1(100 - 26 * s)} 168 Q100 ${f1(168 - 40 * s)} ${f1(100 + 26 * s)} 168 Z" fill="${G}" opacity=".85"/>
+      <path d="M100 98 V166" stroke="${G}" stroke-width="2" stroke-dasharray="3 5" stroke-dashoffset="${f1(-t * 30)}"/>`; },
+  sling: (p, t) => { const k = pr(p, 0.12, 0.55, E.out), x = 52 + 108 * k, y = 138 - 96 * k + 70 * k * k, sw = (1 - k) * S(t * 14) * 10;
+    return `<g opacity="${f1(pr(p, 0.55, 0.75))}" transform="translate(100 42) scale(1.6)"><path d="M-30 14 L-30 -10 L-15 4 L0 -16 L15 4 L30 -10 L30 14 Z" ${SF}/><circle cx="0" cy="-16" r="3" fill="${G}"/><circle cx="-30" cy="-10" r="3" fill="${G}"/><circle cx="30" cy="-10" r="3" fill="${G}"/></g>
+      <g transform="rotate(${f1(sw)} 40 176)"><path d="M40 176 Q30 150 42 134 M40 176 Q62 158 56 134" ${ST}/><path d="M38 130 Q49 142 60 130 Q49 124 38 130 Z" ${SF}/></g>
+      <path d="M50 132 Q${f1((50 + x) / 2)} ${f1(Math.min(y, 132) - 46)} ${f1(x)} ${f1(y)}" stroke="${PA}" stroke-width="2.5" stroke-dasharray="4 7" fill="none" opacity="${f1(k * 0.7)}"/><circle cx="${f1(x)}" cy="${f1(y)}" r="10" fill="${PA}"/>`; },
+  birds: (p, t) => Array.from({ length: 6 }, (_, k) => { const x = ((t * 34 + k * 40) % 240) - 20, y = 50 + (k % 3) * 34 + S(t + k) * 6, f = 10 * S(t * 9 + k); return `<path d="M${f1(x - 18)} ${f1(y - f)} Q${f1(x - 9)} ${f1(y - 10)} ${f1(x)} ${f1(y)} Q${f1(x + 9)} ${f1(y - 10)} ${f1(x + 18)} ${f1(y - f)}" ${ST}/>`; }).join("") + `<path d="M20 172 H180" ${ST} opacity=".4"/>`,
+  call: (p, t) => `<path d="M14 170 Q100 100 186 170" ${SF}/>${[0, 1, 2, 3].map((k) => { const r = ((t * 36 + k * 26) % 104); return `<circle cx="100" cy="112" r="${f1(r)}" ${ST} opacity="${f1(Math.max(0, 1 - r / 104))}"/>`; }).join("")}<circle cx="100" cy="112" r="7" fill="${G}"/>`,
+  star: (p, t) => `${Array.from({ length: 14 }, (_, k) => { const r = rng(k + 3); return `<circle cx="${f1(20 + r() * 160)}" cy="${f1(20 + r() * 160)}" r="${f1(1.5 + r() * 2)}" fill="${PA}" opacity="${f1(0.4 + 0.4 * S(t * 2 + k))}"/>`; }).join("")}${glow2(100, 100, 60, 0.6 + 0.2 * S(t * 3))}${star8(100, 100, 40 + 3 * S(t * 3), `fill="${G}"`)}`,
+  whale: (p, t) => `${[0, 1, 2].map((k) => `<circle cx="100" cy="104" r="${86 - k * 6}" fill="none" stroke="#0A1A2E" stroke-width="10" opacity=".5"/>`).join("")}
+    <g transform="translate(0 ${f1(S(t * 1.5) * 4)})"><path d="M26 108 C34 72 124 60 160 94 L182 78 L178 108 L184 136 L160 122 C126 150 40 146 26 108 Z" fill="rgba(40,80,120,.35)" stroke="#8FB4D8" stroke-width="4.5" stroke-linejoin="round"/>
+    <circle cx="54" cy="100" r="3.5" fill="#8FB4D8"/><path d="M40 118 Q60 124 80 118" stroke="#8FB4D8" stroke-width="3" fill="none"/>${glow2(104, 108, 22, 0.6 + 0.4 * S(t * 4))}<circle cx="104" cy="108" r="4.5" fill="#FFE2A8"/></g>
+    ${[0, 1, 2].map((k) => { const ph = (t * 0.7 + k / 3) % 1; return `<circle cx="${f1(150 + k * 8)}" cy="${f1(80 - ph * 70)}" r="${f1(3 + k)}" fill="none" stroke="#8FB4D8" stroke-width="2" opacity="${f1(1 - ph)}"/>`; }).join("")}`,
+  mihrab: (p, t) => { const sw = S(t * 1.6) * 8;
+    return `<path d="M44 176 V92 A56 56 0 0 1 156 92 V176" ${SF}/><path d="M60 176 V96 A40 40 0 0 1 140 96 V176" ${ST} opacity=".6"/>
+      <g transform="rotate(${f1(sw)} 100 40)"><path d="M100 40 V96" stroke="${G}" stroke-width="3"/>${glow2(100, 112, 30, 0.85)}<path d="M88 96 H112 L118 108 L108 128 H92 L82 108 Z" fill="#FFD68A" stroke="${G}" stroke-width="3.5" stroke-linejoin="round"/></g>`; },
+  book: (p, t) => `<g transform="rotate(${f1(t * 8)} 100 108)" opacity="${f1(0.5 + 0.3 * pr(p, 0, 0.4))}">${Array.from({ length: 12 }, (_, k) => `<path d="M100 108 L${f1(100 + 96 * C(k * TAU / 12))} ${f1(108 + 96 * S(k * TAU / 12))}" stroke="${G}" stroke-width="3" opacity=".35"/>`).join("")}</g>
+    <path d="M100 82 C80 72 54 72 32 82 V146 C54 136 80 136 100 146 Z M100 82 C120 72 146 72 168 82 V146 C146 136 120 136 100 146 Z" fill="#F2E3C2" stroke="${G}" stroke-width="4" stroke-linejoin="round"/>
+    ${[0, 1, 2, 3].map((k) => `<path d="M42 ${96 + k * 11} Q66 ${90 + k * 11} 90 ${96 + k * 11} M110 ${96 + k * 11} Q134 ${90 + k * 11} 158 ${96 + k * 11}" stroke="#9A7A4A" stroke-width="2.5" fill="none"/>`).join("")}`,
+  claybird: (p, t) => { const k = pr(p, 0.25, 0.6, E.io), fly = pr(p, 0.55, 1, E.in), col = lerpHex("#8A5A3A", "#F6F0E4", k), fl = k > 0.6 ? 14 * S(t * 12) : 0;
+    return `<path d="M40 168 Q100 156 160 168" ${ST} opacity=".5"/><g transform="translate(${f1(fly * 40)} ${f1(-fly * 70)})">
+      <path d="M58 128 Q82 118 104 124 Q124 112 146 116 Q132 128 120 134 Q96 146 58 128 Z" fill="${col}" stroke="${G}" stroke-width="3"/>
+      <path d="M96 124 Q90 ${f1(96 - fl)} 70 ${f1(92 - fl)} Q86 112 96 124 Z M106 122 Q118 ${f1(92 - fl)} 136 ${f1(90 - fl)} Q122 110 106 122 Z" fill="${col}" stroke="${G}" stroke-width="3"/><circle cx="138" cy="118" r="2.4" fill="#1A120C"/></g>`; },
+  mercy: (p, t) => `<g transform="rotate(${f1(t * 6)} 100 100)">${Array.from({ length: 32 }, (_, k) => { const a = k * TAU / 32, r2 = 70 + 22 * pr(p, 0, 0.5, E.out) + (k % 2 ? 0 : 10); return `<path d="M${f1(100 + 46 * C(a))} ${f1(100 + 46 * S(a))} L${f1(100 + r2 * C(a))} ${f1(100 + r2 * S(a))}" stroke="${G}" stroke-width="2.5" opacity=".55"/>`; }).join("")}</g>
+    ${glow2(100, 100, 52, 0.8)}<circle cx="100" cy="100" r="40" fill="none" stroke="${G}" stroke-width="4"/>${star8(100, 100, 30, `fill="${G}"`)}<circle cx="100" cy="100" r="9" fill="#FFF3D6"/>`,
+};
+function glow2(x, y, r, o = 0.8) { return `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#g2)" opacity="${f1(o)}"/>`; }
+const DEFS = `<defs><radialGradient id="g2"><stop offset="0" stop-color="#FFD68A" stop-opacity=".9"/><stop offset="1" stop-color="#FFD68A" stop-opacity="0"/></radialGradient></defs>`;
+
+// ---------- backdrop ----------
+const glow = (x, y, r, rgba, cls = "") => `<div class="${cls}" style="position:absolute;left:${x - r}px;top:${y - r}px;width:${2 * r}px;height:${2 * r}px;border-radius:50%;background:radial-gradient(circle,${rgba},rgba(0,0,0,0) 68%)"></div>`;
+function starfield(n, seed, maxY) { const r = rng(seed); let a = "", b = ""; for (let i = 0; i < n; i++) { const c = `<circle cx="${f1(r() * W)}" cy="${f1(r() * maxY)}" r="${(0.6 + r() * 1.8).toFixed(2)}" fill="${PA}" opacity="${(0.2 + r() * 0.6).toFixed(2)}"/>`; if (i % 2) a += c; else b += c; } return `<g class="stA">${a}</g><g class="stB">${b}</g>`; }
+const hexA = (h, a) => `rgba(${parseInt(h.slice(1, 3), 16)},${parseInt(h.slice(3, 5), 16)},${parseInt(h.slice(5, 7), 16)},${a})`;
+scene(0, window.DURATION, () => `<div class="abs" style="width:${W}px;height:${H}px;background:linear-gradient(180deg,#05070F 0%,#0B1222 55%,#0E1526 80%,#080B14)"></div>
+  <div class="hue abs" style="width:${W}px;height:${H}px"></div>
+  <svg width="${W}" height="${H}" class="abs" style="opacity:.06"><defs><pattern id="lat" width="120" height="120" patternUnits="userSpaceOnUse"><g fill="none" stroke="${G}" stroke-width="1.6"><rect x="30" y="30" width="60" height="60"/><rect x="30" y="30" width="60" height="60" transform="rotate(45 60 60)"/></g></pattern></defs><rect class="lt" width="1300" height="2200" fill="url(#lat)"/></svg>
+  <svg class="abs" width="${W}" height="${H}">${starfield(170, 5, 1900)}</svg><svg width="0" height="0" style="position:absolute">${DEFS}</svg>`,
+  (el, t) => {
+    $(el, ".lt").setAttribute("transform", `translate(${f1(-(t * 4) % 120)} ${f1(-(t * 6) % 120)})`);
+    $$(el, ".stA").forEach((g) => (g.style.opacity = 0.62 + 0.38 * S(t * 2.3))); $$(el, ".stB").forEach((g) => (g.style.opacity = 0.62 + 0.38 * C(t * 1.9)));
+    let i = 0; while (i < 25 && t >= T[i + 1]) i++;
+    const hue = i >= 1 && i <= 25 ? P[i - 1][5] : "#3A4A6A";
+    $(el, ".hue").style.background = `radial-gradient(circle at 50% 30%, ${hexA(hue, 0.55)} 0, rgba(0,0,0,0) 55%)`;
+  }, 0);
+
+// ---------- shots ----------
+const TR = 0.32;
+function shot(i, a, b, html, upd) {
+  scene(a, b + TR, () => `<div class="cam">${html}</div>`, (el, t, abs) => {
+    const d = b + TR - a, inn = i === 0 ? 1 : pr(t, 0, TR, E.out), out = pr(t, d - TR, d, E.in);
+    const c = $(el, ".cam"); c.style.transform = `scale(${(mix(1.12, 1, inn) * mix(1, 1.06, out) * mix(1.0, 1.03, pr(t, 0, d, E.lin))).toFixed(4)})`;
+    // Same layout on every card: fade the outgoing card so two names never sit on top of each other.
+    el.style.opacity = inn * (1 - out); c.style.filter = inn < 1 || out > 0 ? `blur(${mix(12, 0, inn * (1 - out)).toFixed(1)}px)` : "none";
+    upd(el, t, abs, d);
+  }, 2 + i);
+}
+// Hook: all 25 symbols in a 5x5 grid, lighting up one by one.
+const cellSVG = (k, p, t) => `<svg viewBox="0 0 200 200" width="150" height="150">${SYM[P[k][4]](p, t)}</svg>`;
+shot(0, T[0], T[1], `<div class="grid" style="position:absolute;left:90px;top:230px;width:900px;display:grid;grid-template-columns:repeat(5,180px);row-gap:22px">
+    ${P.map((_, k) => `<div class="cell" style="width:160px;height:160px;border-radius:50%;border:2px solid rgba(232,180,90,.45);background:rgba(10,14,26,.8);display:grid;place-items:center;opacity:0"></div>`).join("")}</div>`,
+  (el, t) => $$(el, ".cell").forEach((c, k) => { const a = 0.02 + k * 0.05; c.style.opacity = pr(t, a, a + 0.12); c.style.scale = mix(0.6, 1, pr(t, a, a + 0.3, E.back)); c.innerHTML = cellSVG(k, Math.min(1, t / 3), t); }));
+// One card per prophet.
+P.forEach(([en, alt, ar, ref, sym], k) => {
+  const i = k + 1, last = k === 24;
+  shot(i, T[i], T[i + 1], `
+    ${glow(540, 560, 420, "rgba(232,180,90,.16)")}
+    <svg class="abs" width="${W}" height="1200"><g class="frame" transform="translate(540 560)">${star8(0, 0, 330, `fill="none" stroke="${G}" stroke-width="2" opacity=".22"`)}</g>
+      <circle cx="540" cy="560" r="258" fill="url(#med${i})" stroke="${G}" stroke-width="5"/><circle cx="540" cy="560" r="240" fill="none" stroke="${G}" stroke-width="1.5" opacity=".5"/>
+      <defs><radialGradient id="med${i}" cx=".5" cy=".42" r=".6"><stop offset="0" stop-color="#16203A"/><stop offset="1" stop-color="#070A12"/></radialGradient></defs></svg>
+    <svg class="sym abs" viewBox="0 0 200 200" width="400" height="400" style="left:340px;top:360px"><g class="sg"></g></svg>
+    <div class="nm" style="position:absolute;left:0;right:0;top:${last ? 818 : 830}px;text-align:center">
+      <div class="arn ln"><span>${ar}</span></div>
+      <div class="hon ln"><span>${last ? "صَلَّى ٱللَّٰهُ عَلَيْهِ وَسَلَّمَ" : "عَلَيْهِ ٱلسَّلَامُ"}</span></div>
+      <div class="enn ln" style="margin-top:18px"><span style="margin:0;font:inherit;color:inherit">${en}${last ? " ﷺ" : ""}</span>${alt ? `<span>${alt}</span>` : ""}</div>
+      <div class="rf" style="margin-top:30px"><span class="chip">Quran <b>${ref}</b></span></div></div>`,
+    (el, t, abs, d) => {
+      const m = $(el, ".sym"); m.style.scale = mix(0.86, 1, pr(t, 0, 0.45, E.back)); m.style.opacity = pr(t, 0, 0.2);
+      $(el, ".sg").innerHTML = SYM[sym](pr(t, 0, d - TR, E.lin), t);
+      $(el, ".frame").setAttribute("transform", `translate(540 560) rotate(${f1(t * 6)})`);
+      lines($(el, ".nm"), t, 0.08, 0.07, 0.35);
+      popIn(el, ".rf", t, [0.45], 0.7);
+    });
+});
+// The ask: the grid again, then the question.
+shot(26, T[26], T[27], `<div class="grid" style="position:absolute;left:90px;top:720px;width:900px;display:grid;grid-template-columns:repeat(5,180px);row-gap:22px;opacity:.5">
+    ${P.map(() => `<div class="cell" style="width:160px;height:160px;border-radius:50%;border:2px solid rgba(232,180,90,.45);background:rgba(10,14,26,.8);display:grid;place-items:center"></div>`).join("")}</div>`,
+  (el, t) => $$(el, ".cell").forEach((c, k) => (c.innerHTML = cellSVG(k, 1, t))));
+
+// ---------- overlays (fixed) ----------
+scene(0, T[1] + 0.2, () => `<div class="hook" style="top:1250px"><div class="h2">Save this 📌</div><div class="h1">All <b>25 prophets</b><br>named in the Quran</div></div>`,
+  (el, t) => { el.style.opacity = 1 - pr(t, T[1] - 0.15, T[1] + 0.2); $(el, ".h1").style.scale = mix(1.06, 1, pr(t, 0, 0.4, E.expo)); $(el, ".h2").style.scale = mix(0.7, 1, pr(t, 0.2, 0.5, E.back)); $(el, ".h2").style.opacity = pr(t, 0.2, 0.3); }, 31);
+scene(T[1], T[26], () => `<div style="position:absolute;left:0;right:0;top:112px;text-align:center"><span class="chip" style="font-size:32px">Prophets named in the <b>Quran</b></span></div>
+  <div style="position:absolute;left:160px;right:160px;top:196px;height:10px;border-radius:5px;background:rgba(242,232,213,.14)"><div class="bar" style="height:10px;border-radius:5px;background:${G};width:0"></div></div>
+  <div class="cnt" style="position:absolute;left:0;right:0;top:222px;text-align:center;font:800 34px/1 Poppins;color:${PA}"></div>`,
+  (el, t, abs) => {
+    let i = 1; while (i < 25 && abs >= T[i + 1]) i++;
+    $(el, ".bar").style.width = `${f1(100 * mix(i - 1, i, pr(abs, T[i], T[i] + 0.5, E.out)) / 25)}%`;
+    $(el, ".cnt").innerHTML = `<span style="color:${G}">${i}</span> of 25`;
+    el.style.opacity = pr(t, 0, 0.3) * (1 - pr(abs, T[26] - 0.3, T[26]));
+  }, 30);
+CAPS.slice(FIRST[1], FIRST[26]).forEach(([a, b, html]) => {
+  scene(a, b + 0.08, () => `<div class="bcap" style="bottom:360px">${AL(html)}</div>`,
+    (el, t) => { const n = $(el, ".bcap"); n.style.opacity = pr(t, 0, 0.08) * (1 - pr(t, b - a, b - a + 0.08)); n.style.scale = mix(0.93, 1, pr(t, 0, 0.16, E.back)); }, 21);
+});
+scene(T[26], T[27], () => `<div style="position:absolute;left:40px;right:40px;top:230px;text-align:center">
+    <div class="q1" style="font:900 96px/1.08 Poppins;color:#fff;-webkit-text-stroke:12px rgba(5,7,11,.95);paint-order:stroke fill">Whose <span style="color:${G}">full story</span><br>do you want?</div>
+    <div class="q2" style="margin-top:44px"><span class="chip" style="font-size:48px;padding:24px 40px 22px;background:${PA};color:#0B0F1A;border:none">Comment the name 👇</span></div></div>`,
+  (el, t) => popIn(el, ".q1, .q2", t, [0.05, cs(26, 1) - T[26]], 0.75), 35);
+scene(T[27], window.DURATION, () => `<div class="abs" style="width:${W}px;height:${H}px;background:linear-gradient(180deg,#070A14,#0F1A2C 60%,#0B0F1A)"></div>
+  <svg class="abs" width="${W}" height="${H}">${starfield(120, 91, 1900)}</svg>${glow(540, 640, 360, "rgba(232,180,90,.22)")}
+  <div style="position:absolute;left:0;right:0;top:470px;text-align:center">
+    <div class="e1" style="font:700 44px/1 Poppins;color:#C9B89A;letter-spacing:.2em">THE 25 PROPHETS</div>
+    <div class="e2" style="margin-top:30px;font:900 100px/1.05 Poppins;color:${PA}">Their full<br><span style="color:${G}">stories</span>, next</div>
+    <div class="e4" style="margin-top:70px"><span class="btn">Follow</span></div>
+    <div class="e5" style="margin-top:40px;font:700 46px/1 Poppins;color:#A9B4B6">${HANDLE}</div>
+    <div class="e6" style="margin-top:70px"><span class="chip">Every card cites its <b>ayah</b></span></div></div>`,
+  (el, t) => { el.style.opacity = pr(t, 0, 0.35); popIn(el, ".e1, .e2, .e4, .e5, .e6", t, [0.05, 0.2, 0.5, 0.65, 0.85], 0.85); }, 50);
+
+// Grain + vignette.
+(function fx() {
+  const fx = document.createElement("div"); fx.style.cssText = "position:absolute;inset:0;pointer-events:none;z-index:60";
+  fx.innerHTML = `<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 42%,rgba(0,0,0,0) 55%,rgba(0,0,0,.5) 100%)"></div><canvas width="270" height="480" style="position:absolute;inset:0;width:1080px;height:1920px;opacity:.06;mix-blend-mode:overlay"></canvas>`;
+  stage.appendChild(fx);
+  const ctx = fx.querySelector("canvas").getContext("2d"), gi = ctx.createImageData(270, 480), inner = window.seek;
+  window.seek = (t) => { inner(t); let s = Math.floor(t * 30) * 9301 + 49297; const r = () => ((s = (s * 9301 + 49297) % 233280) / 233280); for (let i = 0; i < gi.data.length; i += 4) { const v = r() * 255; gi.data[i] = gi.data[i + 1] = gi.data[i + 2] = v; gi.data[i + 3] = 255; } ctx.putImageData(gi, 0, 0); };
+})();
+</script></body></html>

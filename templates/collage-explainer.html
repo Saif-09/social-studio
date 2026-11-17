@@ -1,0 +1,184 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Amiri:wght@400;700&family=Amiri+Quran&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+:root{--paper:#F7F3EA;--ink:#151515;--red:#C8262B;--tape:#F2C14E;--navy:#14223D}
+#stage{background:#EFE6D2}
+.abs{position:absolute;left:0;top:0}
+.cam{position:absolute;inset:0}
+.el{position:absolute;left:0;right:0;text-align:center}
+.el>.in{display:inline-block;transform-origin:50% 50%}
+.paper{background:var(--paper);color:var(--ink);font:400 84px/1.16 Anton,sans-serif;letter-spacing:.01em;text-transform:uppercase;padding:22px 34px 18px;max-width:920px;box-shadow:0 10px 0 rgba(0,0,0,.12),0 18px 40px rgba(0,0,0,.18)}
+.paper em{font-style:normal;background:var(--red);color:#fff;padding:0 .14em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.paper.y em{background:var(--tape);color:var(--ink)}
+.tape{display:inline-block;background:var(--tape);color:var(--ink);font:700 30px/1 Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:12px 22px 10px;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.stk{display:inline-block;background:var(--paper);padding:16px;box-shadow:0 8px 0 rgba(0,0,0,.12),0 16px 30px rgba(0,0,0,.2)}
+.stk .lb{display:block;margin-top:10px;background:var(--navy);color:#fff;font:700 24px/1 Oswald,sans-serif;letter-spacing:.1em;padding:9px 12px 7px;text-transform:uppercase}
+.card{background:var(--paper);width:880px;padding:40px 46px 34px;box-shadow:0 12px 0 rgba(0,0,0,.12),0 22px 50px rgba(0,0,0,.22);text-align:center}
+.card .ar{font:400 70px/1.75 "Amiri Quran",Amiri,serif;color:var(--ink);direction:rtl;text-wrap:balance}
+.card .en{margin-top:10px;font:700 40px/1.18 Oswald,sans-serif;color:var(--ink);text-transform:uppercase;letter-spacing:.01em}
+.card .en em{font-style:normal;color:var(--red)}
+.card .who{font:700 30px/1 Oswald,sans-serif;letter-spacing:.1em;color:var(--red);text-transform:uppercase;margin-bottom:18px}
+.card .rf{margin-top:24px}
+.num{display:inline-grid;place-items:center;width:150px;height:150px;border-radius:50%;background:var(--paper);border:8px solid var(--tape);font:400 86px/1 Anton,sans-serif;color:var(--ink);margin:0 18px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+</style></head>
+<body><div id="stage"></div>
+<script id="sc" type="application/json">[["hook", "", ["THE LAST SOUND: THEIR *FOOTSTEPS*, WALKING AWAY", "EVERY PHASE AFTER DEATH. *2 MINUTES*."]], ["soul", "", ["PHASE 1: THE *SOUL* IS TAKEN", "THE ANGEL OF DEATH *WILL TAKE YOU*"]], ["grave", "", ["PHASE 2: *THE GRAVE*", "WASHED. WRAPPED. PRAYED OVER. *BURIED*.", "HE HEARS THEIR *FOOTSTEPS* AS THEY LEAVE"]], ["questions", "", ["PHASE 3: *THREE QUESTIONS*", "WHO IS YOUR *LORD*?", "WHAT IS YOUR *RELIGION*?", "WHO IS THIS MAN *SENT AMONG YOU*?", "MY LORD IS *ALLAH*. MY RELIGION IS *ISLAM*. HE IS THE *MESSENGER OF ALLAH* ﷺ.", "THE OTHER SAYS: \"*I DO NOT KNOW*\""]], ["seat", "", ["PHASE 4: HE IS *SHOWN HIS PLACE*", "FIRST, THE SEAT HE COULD HAVE HAD *IN THE FIRE*", "THEN: \"ALLAH GAVE YOU A SEAT *IN PARADISE*\""]], ["barzakh", "", ["PHASE 5: *BARZAKH*", "BETWEEN DEATH AND *RESURRECTION*", "SHOWN HIS PLACE *MORNING AND EVENING*", "HOW LONG? *ALLAH KNOWS BEST*."]], ["trumpet", "39:68", ["PHASE 6: *THE TRUMPET*", "ALL FALL, *EXCEPT WHOM ALLAH WILLS*", "BLOWN AGAIN: ALL *STANDING*, LOOKING ON"]], ["rising", "", ["PHASE 7: *THE RISING*", "OUT OF THE GRAVES, *RUSHING* TO THEIR LORD", "THE SUN DRAWN CLOSE. SWEAT, *BY DEEDS*."]], ["record", "", ["PHASE 8: THE *RECORD* AND THE *SCALE*", "\"HERE, *READ MY RECORD*!\"", "NO ONE WRONGED. EVEN A *MUSTARD SEED* IS WEIGHED."]], ["bridge", "", ["PHASE 9: *THE BRIDGE*", "A BRIDGE *OVER THE FIRE*", "SOME IN A *BLINK*. SOME LIKE *LIGHTNING*. SOME LIKE *WIND*.", "AND *SOME FALL*."]], ["paradise", "39:73", ["THE *LAST* PHASE", "LED TO PARADISE. ITS GATES *ALREADY OPEN*.", "\"*PEACE BE UPON YOU*. ENTER, FOREVER.\""]], ["close", "", ["THIS IS THE ROAD. BUILD IT *TODAY*.", "COMMENT: YA ALLAH, GRANT US *JANNAH* 🤲"]]]</script>
+<script src="lib.js"></script>
+<script src="vo/reel07-timing.js"></script>
+<script>
+// faith brand reel 07: every phase after death (format studied from the @islaminsketches reel, 2:54). Collage look of
+// reel 06, Urdu voice, English caption strips. No angel or human figures: angels are light, the rest are objects and places.
+// Sources: Quran 32:11, 39:68, 36:51, 69:19, 21:47, 39:73; Bukhari 1338, 1374, 1379; Abu Dawud 4753 (sahih); Muslim 183, 2864.
+const T = window.TIMES, CAPS = window.CAPS;
+window.DURATION = T[T.length - 1];
+const HANDLE = "@yourbrand";
+const SC = JSON.parse(document.getElementById("sc").textContent);
+const BEATS = SC.map((x) => x[2].length);
+const FIRST = BEATS.map((_, i) => BEATS.slice(0, i).reduce((a, b) => a + b, 0));
+const bs = (s, k) => (k < 0 ? T[s] : CAPS[FIRST[s] + k][0]);
+const W = 1080, H = 1920, f1 = (x) => (+x).toFixed(1), S = Math.sin;
+const hl = (s) => s.replace(/\*(.+?)\*/g, "<em>$1</em>");
+// Arabic glyphs inside an English line: isolate each one, or the bidi algorithm swaps "Allah" and "ﷺ".
+const AL = (s) => s.replace(/\bALLAH\b/g, `<span style="font-family:Amiri;font-weight:700;font-size:1.1em;text-transform:none;unicode-bidi:isolate">اللّٰه</span>`).replace(/ﷺ/g, `<span style="unicode-bidi:isolate">ﷺ</span>`);
+const rngv = (n) => { const x = S(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+
+// ---------- pieces ----------
+// Torn paper edge as a clip-path; every strip gets its own seed.
+const jag = (seed) => { const p = []; for (let i = 0; i <= 20; i++) p.push(`${i * 5}% ${f1(rngv(seed + i) * 7)}px`); for (let i = 20; i >= 0; i--) p.push(`${i * 5}% calc(100% - ${f1(rngv(seed + 50 + i) * 7)}px)`); return `clip-path:polygon(${p.join(",")})`; };
+let SEED = 1;
+const el = (b, top, inner, o = {}) => `<div class="el" data-b="${b}" data-d="${o.d ?? 0}" data-o="${o.o ?? 99}" data-r="${o.r ?? f1((rngv(SEED++) - 0.5) * 4)}" data-m="${o.m ?? "slam"}" style="top:${top}px;${o.left != null ? `left:${o.left}px;right:auto;` : ""}"><div class="in">${inner}</div></div>`;
+const strip = (txt, size = 84, cls = "") => `<div class="paper ${cls}" style="font-size:${size}px;${jag(SEED * 7)}">${AL(hl(txt))}</div>`;
+const tape = (txt) => `<span class="tape">${txt}</span>`;
+const stk = (svg, label, size = 170) => `<span class="stk"><svg viewBox="0 0 100 100" width="${size}" height="${size}">${svg}</svg>${label ? `<span class="lb">${label}</span>` : ""}</span>`;
+const card = (o) => `<div class="card" style="${jag(SEED * 11)}">${o.who ? `<div class="who">${o.who}</div>` : ""}${o.ar ? `<div class="ar">${o.ar}</div>` : ""}<div class="en">${AL(hl(o.en))}</div><div class="rf">${tape(o.ref)}</div></div>`;
+const marker = (w, h) => `<svg width="${w + 40}" height="${h + 40}" style="overflow:visible"><ellipse class="mk" cx="${(w + 40) / 2}" cy="${(h + 40) / 2}" rx="${w / 2 + 6}" ry="${h / 2 + 6}" fill="none" stroke="#C8262B" stroke-width="8" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" transform="rotate(-6 ${(w + 40) / 2} ${(h + 40) / 2})"/></svg>`;
+// Icons, 100x100.
+const I = {
+  star: `<path d="M50 12 L84 70 H16 Z M50 88 L16 30 H84 Z" fill="none" stroke="#1F4E9C" stroke-width="7" stroke-linejoin="round"/>`,
+  cross: `<path d="M42 10 H58 V34 H82 V50 H58 V90 H42 V50 H18 V34 H42 Z" fill="#C8262B"/>`,
+  crescent: `<circle cx="44" cy="50" r="34" fill="#1E7A46"/><circle cx="58" cy="44" r="28" fill="#F7F3EA"/><polygon points="72,38 75,47 84,47 77,53 80,62 72,56 64,62 67,53 60,47 69,47" fill="#1E7A46"/>`,
+  scroll: `<rect x="22" y="24" width="56" height="52" fill="#E8D6AE" stroke="#151515" stroke-width="4"/><rect x="14" y="18" width="72" height="12" rx="6" fill="#C9A86A" stroke="#151515" stroke-width="4"/><rect x="14" y="70" width="72" height="12" rx="6" fill="#C9A86A" stroke="#151515" stroke-width="4"/><path d="M32 42 H68 M32 52 H68 M32 62 H58" stroke="#151515" stroke-width="3.5"/>`,
+  noor: `<circle cx="50" cy="50" r="18" fill="#F2C14E" stroke="#151515" stroke-width="4"/>${Array.from({ length: 12 }, (_, k) => { const a = k * Math.PI / 6; return `<path d="M${f1(50 + 26 * Math.cos(a))} ${f1(50 + 26 * Math.sin(a))} L${f1(50 + (k % 2 ? 36 : 42) * Math.cos(a))} ${f1(50 + (k % 2 ? 36 : 42) * Math.sin(a))}" stroke="#E0A82E" stroke-width="5" stroke-linecap="round"/>`; }).join("")}`,
+  flame: `<path d="M50 92 C24 90 18 64 30 46 C32 58 40 60 42 56 C36 38 46 20 62 8 C60 30 80 44 78 66 C76 84 64 92 50 92 Z" fill="#F07A1E" stroke="#151515" stroke-width="4"/><path d="M50 90 C38 88 36 74 44 64 C46 72 52 72 54 68 C58 76 62 86 50 90 Z" fill="#FFD25A"/>`,
+  bolt: `<path d="M58 6 L22 56 H46 L36 94 L78 40 H54 Z" fill="#F2C14E" stroke="#151515" stroke-width="4.5" stroke-linejoin="round"/>`,
+  serpent: `<path d="M74 18 C40 10 22 30 40 44 C58 58 60 70 36 84 L20 90" fill="none" stroke="#2F6B3A" stroke-width="13" stroke-linecap="round"/><path d="M74 18 C40 10 22 30 40 44 C58 58 60 70 36 84 L20 90" fill="none" stroke="#151515" stroke-width="2" stroke-dasharray="1 10" stroke-linecap="round"/><circle cx="78" cy="18" r="9" fill="#2F6B3A" stroke="#151515" stroke-width="3"/><path d="M86 18 L96 14 M86 18 L96 22" stroke="#C8262B" stroke-width="3" stroke-linecap="round"/>`,
+  fall: `<path d="M24 44 C24 32 38 28 46 34 C52 22 72 24 74 38 C86 38 88 54 76 56 H28 C18 56 16 46 24 44 Z" fill="#FFFFFF" stroke="#151515" stroke-width="4"/><path d="M50 60 V90 M40 80 L50 92 L60 80" stroke="#C8262B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+  q: `<text x="50" y="78" text-anchor="middle" font-family="Anton" font-size="78" fill="#C8262B">?</text>`,
+};
+
+// ---------- backdrop: a colour block per section, paper texture, grain ----------
+const BG = ["#14223D", "#EFE6D2", "#EFE6D2", "#14223D", "#EFE6D2", "#0E1830", "#7E1C20", "#EFE6D2", "#EFE6D2", "#7E1C20", "#1E4D40", "#14223D"];
+scene(0, window.DURATION, () => `<div class="bgc abs" style="width:${W}px;height:${H}px"></div><canvas class="tex" width="540" height="960" style="position:absolute;inset:0;width:1080px;height:1920px;opacity:.10;mix-blend-mode:multiply"></canvas>
+  <div class="abs" style="width:${W}px;height:${H}px;background:radial-gradient(ellipse at 50% 42%,rgba(255,255,255,.10),rgba(0,0,0,0) 50%,rgba(0,0,0,.32) 100%)"></div>`,
+  (e, t) => { let s = 0; while (s + 1 < BG.length && t >= T[s + 1]) s++; $(e, ".bgc").style.background = t >= T[BG.length] ? "#14223D" : BG[s]; }, 0);
+window.addEventListener("load", () => { const c = document.querySelector(".tex"); if (!c) return; const x = c.getContext("2d"), d = x.createImageData(540, 960); for (let i = 0; i < d.data.length; i += 4) { const v = 120 + Math.random() * 135; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); });
+
+// ---------- generic element animation inside a scene ----------
+function animate(e, s, abs) {
+  $$(e, ".el").forEach((n) => {
+    const b = +n.dataset.b, a0 = bs(s, Math.max(b, 0)) + (b < 0 ? 0 : +n.dataset.d) + (b < 0 ? +n.dataset.d : 0), out = +n.dataset.o, r = +n.dataset.r, m = n.dataset.m, inn = $(n, ".in");
+    const shownFromStart = b < 0 && +n.dataset.d === 0;
+    const p = shownFromStart ? 1 : pr(abs, a0, a0 + 0.32, E.back), gone = out < 99 && out < BEATS[s] ? pr(abs, bs(s, out) - 0.05, bs(s, out) + 0.12) : 0;
+    n.style.opacity = (shownFromStart ? 1 : pr(abs, a0, a0 + 0.06)) * (1 - gone);
+    if (m === "slam") inn.style.transform = `rotate(${f1(r + (1 - p) * 8)}deg) scale(${(mix(1.3, 1, p) * (1 + 0.006 * S(abs * 2 + r))).toFixed(4)})`;
+    else if (m === "slide") inn.style.transform = `rotate(${f1(r)}deg) translateX(${f1(mix(-160, 0, pr(abs, a0, a0 + 0.35, E.expo)))}px)`;
+    else inn.style.transform = `rotate(${f1(r)}deg)`;
+    const mk = $(n, ".mk"); if (mk) mk.style.strokeDashoffset = f1(100 - 100 * pr(abs, a0, a0 + 0.5, E.out));
+  });
+}
+const TR = 0.22;
+function shot(i, html) {
+  const a = T[i], b = T[i + 1];
+  scene(a, b + TR, () => `<div class="cam">${html}</div>`, (e, t, abs) => {
+    const d = b + TR - a, inn = i === 0 ? 1 : pr(t, 0, TR, E.out), out = pr(t, d - TR, d, E.in);
+    e.style.opacity = inn * (1 - out); $(e, ".cam").style.transform = `scale(${(mix(1.05, 1, inn) * mix(1, 0.97, out)).toFixed(4)})`;
+    animate(e, i, abs);
+  }, 2 + i);
+}
+const CAP = (s, k, top = 1190, size = 82, o = {}) => el(k, top, strip(SC[s][2][k], size), { o: k + 1, ...o });
+
+// ---------- scenes (v2: one idea per screen) ----------
+Object.assign(I, {
+  heart: `<path d="M4 54 H30 L38 32 L50 76 L58 42 L64 54 H96" fill="none" stroke="#C8262B" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>`,
+  steps: [[30, 78, -12], [48, 62, 12], [36, 44, -12], [56, 28, 12], [44, 12, -12]].map(([x, y, r]) => `<ellipse cx="${x}" cy="${y}" rx="7" ry="11" fill="#151515" transform="rotate(${r} ${x} ${y})"/><circle cx="${x}" cy="${y - 13}" r="4" fill="#151515"/>`).join(""),
+  grave: `<path d="M8 84 Q50 54 92 84 Z" fill="#B99B72" stroke="#151515" stroke-width="4"/><path d="M40 78 V36 Q50 26 60 36 V78" fill="#E8DCC6" stroke="#151515" stroke-width="4"/><path d="M46 48 H54" stroke="#151515" stroke-width="3"/>`,
+  shroud: `<path d="M10 58 Q10 42 26 42 H76 Q92 42 92 58 Q92 74 76 74 H26 Q10 74 10 58 Z" fill="#FFFFFF" stroke="#151515" stroke-width="4"/><path d="M30 42 V74 M52 42 V74 M74 42 V74" stroke="#151515" stroke-width="3"/>`,
+  hourglass: `<path d="M26 10 H74 M26 90 H74" stroke="#151515" stroke-width="5" stroke-linecap="round"/><path d="M32 10 C32 40 48 44 48 50 C48 56 32 60 32 90 H68 C68 60 52 56 52 50 C52 44 68 40 68 10 Z" fill="#FFF6E0" stroke="#151515" stroke-width="4"/><path d="M38 80 Q50 66 62 80 Z M40 22 H60 L50 40 Z" fill="#F2C14E"/>`,
+  sunmoon: `<circle cx="32" cy="50" r="16" fill="#F2C14E" stroke="#151515" stroke-width="4"/>${[0, 1, 2, 3, 4, 5, 6, 7].map((k) => { const a = k * Math.PI / 4; return `<path d="M${f1(32 + 21 * Math.cos(a))} ${f1(50 + 21 * Math.sin(a))} L${f1(32 + 27 * Math.cos(a))} ${f1(50 + 27 * Math.sin(a))}" stroke="#E0A82E" stroke-width="4" stroke-linecap="round"/>`; }).join("")}<circle cx="74" cy="50" r="16" fill="#2B3A5E" stroke="#151515" stroke-width="4"/><circle cx="81" cy="45" r="14" fill="#F7F3EA"/>`,
+  horn: `<path d="M12 74 Q44 70 72 26 L86 38 Q54 76 16 86 Z" fill="#E0B25A" stroke="#151515" stroke-width="4" stroke-linejoin="round"/><path d="M80 18 A16 16 0 0 1 94 34 M84 8 A28 28 0 0 1 98 30" fill="none" stroke="#C8262B" stroke-width="4" stroke-linecap="round"/>`,
+  rise: [20, 50, 80].map((x, k) => `<path d="M${x} 88 V${30 + k % 2 * 10} M${x - 10} ${42 + k % 2 * 10} L${x} ${30 + k % 2 * 10} L${x + 10} ${42 + k % 2 * 10}" fill="none" stroke="#151515" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`).join("") + `<path d="M8 90 H92" stroke="#B99B72" stroke-width="6"/>`,
+  sun: `<circle cx="50" cy="40" r="20" fill="#F07A1E" stroke="#151515" stroke-width="4"/>${Array.from({ length: 10 }, (_, k) => { const a = k * Math.PI / 5; return `<path d="M${f1(50 + 26 * Math.cos(a))} ${f1(40 + 26 * Math.sin(a))} L${f1(50 + 34 * Math.cos(a))} ${f1(40 + 34 * Math.sin(a))}" stroke="#F07A1E" stroke-width="5" stroke-linecap="round"/>`; }).join("")}${[30, 50, 70].map((x) => `<path d="M${x} 78 Q${x - 6} 88 ${x} 92 Q${x + 6} 88 ${x} 78 Z" fill="#5B9BD5" stroke="#151515" stroke-width="2.5"/>`).join("")}`,
+  record: `<rect x="24" y="12" width="52" height="76" fill="#FFFFFF" stroke="#151515" stroke-width="4"/><path d="M34 30 H66 M34 42 H66 M34 54 H56" stroke="#151515" stroke-width="3"/><path d="M36 70 L46 78 L64 62" stroke="#1E7A46" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+  bridge: `<path d="M4 46 Q50 30 96 46" fill="none" stroke="#151515" stroke-width="5"/>${[14, 32, 50, 68, 86].map((x) => `<path d="M${x} 92 C${x - 9} 90 ${x - 10} 78 ${x - 4} 70 C${x - 3} 76 ${x} 77 ${x + 1} 75 C${x - 1} 68 ${x + 3} 62 ${x + 8} 58 C${x + 7} 68 ${x + 12} 74 ${x + 10} 82 C${x + 9} 88 ${x + 5} 92 ${x} 92 Z" fill="#F07A1E" stroke="#151515" stroke-width="2.5"/>`).join("")}`,
+  eye: `<path d="M8 50 Q50 14 92 50 Q50 86 8 50 Z" fill="#FFFFFF" stroke="#151515" stroke-width="4"/><circle cx="50" cy="50" r="16" fill="#1F4E9C" stroke="#151515" stroke-width="3"/><circle cx="50" cy="50" r="7" fill="#151515"/>`,
+  wind: [0, 1, 2].map((k) => `<path d="M10 ${30 + k * 20} H62 Q78 ${30 + k * 20} 78 ${20 + k * 20} Q78 ${10 + k * 20} 68 ${12 + k * 20}" fill="none" stroke="#5B9BD5" stroke-width="6" stroke-linecap="round"/>`).join(""),
+  gate: `<path d="M22 92 V44 A28 28 0 0 1 78 44 V92 Z" fill="#FFF3C8" stroke="#151515" stroke-width="4"/><path d="M22 92 V48 L36 54 V92 Z M78 92 V48 L64 54 V92 Z" fill="#7FB069" stroke="#151515" stroke-width="3"/>${[14, 86].map((x) => `<path d="M${x} 92 L${x - 4} 80 M${x} 92 L${x} 78 M${x} 92 L${x + 4} 80" stroke="#3F7A3A" stroke-width="3" stroke-linecap="round"/>`).join("")}`,
+  twolights: `${[30, 70].map((x) => `<circle cx="${x}" cy="50" r="12" fill="#F2C14E" stroke="#151515" stroke-width="3"/>${Array.from({ length: 10 }, (_, k) => { const a = k * Math.PI / 5; return `<path d="M${f1(x + 17 * Math.cos(a))} ${f1(50 + 17 * Math.sin(a))} L${f1(x + (k % 2 ? 23 : 27) * Math.cos(a))} ${f1(50 + (k % 2 ? 23 : 27) * Math.sin(a))}" stroke="#E0A82E" stroke-width="3.5" stroke-linecap="round"/>`; }).join("")}`).join("")}`,
+  fireseat: `<path d="M50 92 C24 90 18 64 30 46 C32 58 40 60 42 56 C36 38 46 20 62 8 C60 30 80 44 78 66 C76 84 64 92 50 92 Z" fill="#F07A1E" stroke="#151515" stroke-width="4"/><path d="M50 90 C38 88 36 74 44 64 C46 72 52 72 54 68 C58 76 62 86 50 90 Z" fill="#FFD25A"/>`,
+});
+
+// Layout v2: small phase tape + one-line title, ONE big hero per beat (it replaces the last one), one caption, a small source tape.
+const HERO_TOP = 500, CAP_TOP = 1170, REF_TOP = 1060;
+const hero = (b, inner, o) => el(b, HERO_TOP, inner, { o, r: f1((rngv(SEED++) - 0.5) * 3) });
+const heroIcon = (k, size = 420) => stk(I[k], "", size);
+const qcard = (txt, tone = "") => `<div class="paper ${tone}" style="font-size:${txt.replace(/<[^>]+>/g, "").length > 44 ? 74 : 104}px;max-width:860px;padding:60px 56px 52px;${jag(SEED * 13)}">${AL(hl(txt))}</div>`;
+// Phase scenes from a table: [bg, phase label, title, beats: [heroKey | {card}|{q}, ref, showCaption]]
+function phase(i, label, title, beats) {
+  let html = `${el(0, 205, tape(label), { r: -2 })}${el(0, 270, strip(title, 84))}`;
+  beats.forEach(([h, ref, cap], k) => {
+    let next = beats.findIndex((x, j) => j > k && JSON.stringify(x[0]) !== JSON.stringify(h)); if (next < 0) next = 99;
+    const same = k > 0 && JSON.stringify(beats[k - 1][0]) === JSON.stringify(h);
+    if (!same) html += hero(k, typeof h === "string" ? heroIcon(h) : h.card ? card(h.card) : qcard(h.q, h.tone || ""), next);
+    if (cap !== false && k > 0) html += el(k, CAP_TOP, strip(SC[i][2][k], 76), { o: k + 1 });
+    if (ref) html += el(k, REF_TOP, tape(ref), { o: k + 1, d: 0.25 });
+  });
+  shot(i, html);
+}
+
+// Hook: a full night scene from frame 1. A grave, the moon, and footprints walking away, one by one.
+shot(0, `<svg class="abs" width="${W}" height="${H}" style="position:absolute;left:0;top:0">
+    ${Array.from({ length: 70 }, (_, k) => `<circle cx="${f1(rngv(k + 3) * W)}" cy="${f1(rngv(k + 90) * 900)}" r="${f1(1 + rngv(k + 40) * 2.2)}" fill="#F7F3EA" opacity="${f1(0.25 + rngv(k + 7) * 0.6)}"/>`).join("")}
+    <circle cx="840" cy="1010" r="260" fill="url(#mglow)"/><circle cx="840" cy="1010" r="110" fill="#F4E4BF"/><circle cx="885" cy="975" r="96" fill="#14223D"/>
+    <defs><radialGradient id="mglow"><stop offset="0" stop-color="#F4E4BF" stop-opacity=".35"/><stop offset="1" stop-color="#F4E4BF" stop-opacity="0"/></radialGradient></defs>
+    <path d="M-20 1300 Q300 1250 560 1285 T1100 1270 V1920 H-20 Z" fill="#0B1428"/>
+    <g transform="translate(120 900) scale(5)">${I.grave}</g>
+    <g class="fp">${Array.from({ length: 9 }, (_, k) => { const x = 600 + k * 54, y = 1318 + (k % 2 ? 30 : -6) + k * 3, r = 78; return `<g class="p" transform="translate(${x} ${y}) rotate(${r}) scale(2.3)"><ellipse cx="0" cy="0" rx="7" ry="11" fill="#F7F3EA"/><circle cx="0" cy="-13" r="4" fill="#F7F3EA"/></g>`; }).join("")}</g></svg>
+  ${el(-1, 210, strip("THE LAST SOUND<br>IN THE GRAVE", 104))}${el(-1, 530, strip("THEIR <em>FOOTSTEPS</em>,<br>WALKING AWAY", 92), { d: 0.15 })}
+  ${el(1, 810, strip(SC[0][2][1], 66, "y"))}`);
+// Footprints appear one after another, the older ones fading: someone walking away.
+{ const s0 = scenes[scenes.length - 1], up = s0.update; s0.update = (e, t, abs) => { up(e, t, abs); $$(e, ".fp .p").forEach((p, k) => { const a = 0.1 + k * 0.42; p.style.opacity = f1(pr(t, a, a + 0.12) * (1 - 0.55 * pr(t, a + 0.9, a + 2.6))); }); }; }
+
+phase(1, "PHASE 1", "THE <em>SOUL</em> IS TAKEN", [["noor"], [{ card: { ar: "قُلْ يَتَوَفَّىٰكُم مَّلَكُ ٱلْمَوْتِ ٱلَّذِى وُكِّلَ بِكُمْ", en: "THE ANGEL OF DEATH, ENTRUSTED WITH YOU, *WILL TAKE YOU*.", ref: "QURAN 32:11 · SURAH AS-SAJDAH" } }, null, false]]);
+phase(2, "PHASE 2", "<em>THE GRAVE</em>", [["grave"], ["shroud"], ["steps", "SAHIH AL-BUKHARI 1338"]]);
+phase(3, "PHASE 3", "<em>THREE</em> QUESTIONS", [["twolights"], [{ q: "WHO IS<br>YOUR <em>LORD</em>?" }, "SUNAN ABU DAWUD 4753 · SAHIH", false], [{ q: "WHAT IS YOUR<br><em>RELIGION</em>?" }, "SUNAN ABU DAWUD 4753 · SAHIH", false],
+  [{ q: "WHO IS THIS MAN<br><em>SENT AMONG YOU</em>?" }, "SUNAN ABU DAWUD 4753 · SAHIH", false], [{ q: "MY LORD IS <em>ALLAH</em>.<br>MY RELIGION IS <em>ISLAM</em>.<br>HE IS THE MESSENGER OF ALLAH ﷺ.", tone: "y" }, "THE BELIEVER", false],
+  [{ q: "\"<em>I DO NOT KNOW</em>.\"" }, "THE ONE WHO NEVER KNEW", false]]);
+phase(4, "PHASE 4", "HE IS <em>SHOWN HIS PLACE</em>", [["gate"], ["fireseat"], ["gate", "SAHIH AL-BUKHARI 1374"]]);
+phase(5, "PHASE 5", "<em>BARZAKH</em>", [["hourglass"], ["hourglass"], ["sunmoon", "SAHIH AL-BUKHARI 1379"], ["hourglass"]]);
+phase(6, "PHASE 6", "<em>THE TRUMPET</em>", [["horn"], ["horn", "QURAN 39:68 · SURAH AZ-ZUMAR"], ["rise", "QURAN 39:68"]]);
+phase(7, "PHASE 7", "<em>THE RISING</em>", [["rise"], ["rise", "QURAN 36:51 · SURAH YASIN"], ["sun", "SAHIH MUSLIM 2864"]]);
+phase(8, "PHASE 8", "THE <em>RECORD</em> AND <em>SCALE</em>", [["record"], [{ card: { ar: "فَيَقُولُ هَآؤُمُ ٱقْرَءُوا۟ كِتَـٰبِيَهْ", en: "\"HERE, *READ MY RECORD*!\"", ref: "QURAN 69:19 · SURAH AL-HAQQAH" } }, null, false],
+  [{ card: { ar: "وَإِن كَانَ مِثْقَالَ حَبَّةٍ مِّنْ خَرْدَلٍ أَتَيْنَا بِهَا", en: "EVEN A *MUSTARD SEED'S* WEIGHT IS BROUGHT FORTH.", ref: "QURAN 21:47 · SURAH AL-ANBIYA" } }, null, false]]);
+phase(9, "PHASE 9", "<em>THE BRIDGE</em>", [["bridge"], ["bridge", "SAHIH MUSLIM 183"], [{ q: "A <em>BLINK</em>.<br>LIGHTNING.<br>WIND." }, "SAHIH MUSLIM 183", false], ["bridge"]]);
+phase(10, "THE LAST PHASE", "<em>PARADISE</em>", [["gate"], ["gate", "QURAN 39:73 · SURAH AZ-ZUMAR"],
+  [{ card: { ar: "سَلَـٰمٌ عَلَيْكُمْ طِبْتُمْ فَٱدْخُلُوهَا خَـٰلِدِينَ", en: "\"*PEACE BE UPON YOU*. YOU HAVE DONE WELL. ENTER, TO STAY FOREVER.\"", ref: "QURAN 39:73" } }, null, false]]);
+shot(11, `${el(0, 300, stk(I.heart, "", 300))}${el(0, 720, strip("THIS IS THE ROAD.<br>BUILD IT <em>TODAY</em>.", 96), { o: 1 })}
+  ${el(1, 300, qcard("YA ALLAH,<br>GRANT US <em>JANNAH</em> 🤲"), {})}${el(1, 820, tape("COMMENT IT BELOW"), { d: 0.3 })}${el(1, 1000, strip("SEND IT TO <em>SOMEONE YOU LOVE</em>", 66), { d: 0.7 })}`);
+scene(T[12], window.DURATION, () => `<div class="abs" style="width:${W}px;height:${H}px;background:#14223D"></div>
+  <div class="el" style="top:600px"><div class="in f1">${strip("A REMINDER<br><em>EVERY DAY</em>", 104)}</div></div>
+  <div class="el" style="top:980px"><div class="in f2"><span class="tape" style="font-size:48px;padding:20px 40px 16px">FOLLOW ${HANDLE}</span></div></div>`,
+  (e, t) => { e.style.opacity = pr(t, 0, 0.25); popIn(e, ".f1, .f2", t, [0.05, 0.3], 0.8); }, 50);
+
+
+// Grain + vignette on top.
+(function fx() {
+  const fx = document.createElement("div"); fx.style.cssText = "position:absolute;inset:0;pointer-events:none;z-index:60";
+  fx.innerHTML = `<canvas width="270" height="480" style="position:absolute;inset:0;width:1080px;height:1920px;opacity:.07;mix-blend-mode:overlay"></canvas>`;
+  stage.appendChild(fx);
+  const ctx = fx.querySelector("canvas").getContext("2d"), gi = ctx.createImageData(270, 480), inner = window.seek;
+  window.seek = (t) => { inner(t); let s = Math.floor(t * 30) * 9301 + 49297; const r = () => ((s = (s * 9301 + 49297) % 233280) / 233280); for (let i = 0; i < gi.data.length; i += 4) { const v = r() * 255; gi.data[i] = gi.data[i + 1] = gi.data[i + 2] = v; gi.data[i + 3] = 255; } ctx.putImageData(gi, 0, 0); };
+})();
+</script>
+</body></html>

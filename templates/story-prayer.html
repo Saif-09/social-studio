@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,600;0,800;1,500&family=Amiri:wght@400;700&display=block" rel="stylesheet">
+<style>html,body{margin:0;width:1080px;height:1920px;overflow:hidden}
+#s{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"Source Serif 4",serif}
+.t{position:absolute;left:0;right:0;text-align:center}
+.card{position:absolute;left:90px;right:90px;top:760px;background:rgba(251,247,238,.95);border-radius:28px;padding:44px 50px 38px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.22);color:#2C2418}
+.q{font:italic 500 50px/1.32 "Source Serif 4",serif;text-wrap:balance}
+.rf{margin-top:20px;font:600 24px/1 "Source Serif 4",serif;letter-spacing:.24em;color:#8A7A5E}
+</style></head><body><div id="s"></div>
+<script>
+// Prayer reminder Stories for @yourbrand: no clock time; one verified line per story. Index from the URL hash: #prayer-variant.
+const P = {
+ fajr: { en: "FAJR", ar: "الْفَجْر", sky: ["#2A3966", "#7E77AB", "#F0B49B"], sun: [760, 1300, 70, "#FFD9B8"], dark: true, lines: [
+   ["Whoever prays Fajr is under the protection of Allah.", "SAHIH MUSLIM 657"],
+   ["The two rak'ahs before Fajr are better than this world and all it contains.", "SAHIH MUSLIM 725"],
+   ["Indeed, the recitation of dawn is ever witnessed.", "QURAN 17:78"]] },
+ dhuhr: { en: "DHUHR", ar: "الظُّهْر", sky: ["#7DB8E6", "#BFDDF2", "#EEF6FA"], sun: [900, 250, 70, "#FFF6D0"], dark: false, lines: [
+   ["Before Dhuhr is an hour in which the gates of heaven are opened.", "JAMI AT-TIRMIDHI 478 · SAHIH"],
+   ["The first thing a servant will be asked about on the Day of Judgement is his prayer.", "JAMI AT-TIRMIDHI 413 · SAHIH"],
+   ["Seek help through patience and prayer.", "QURAN 2:45"]] },
+ asr: { en: "ASR", ar: "الْعَصْر", sky: ["#D9A35E", "#EDC58A", "#F7E1B5"], sun: [270, 1020, 85, "#FFE7A6"], dark: false, lines: [
+   ["Guard the prayers, and especially the middle prayer.", "QURAN 2:238"],
+   ["Whoever prays the two cool prayers, Fajr and Asr, will enter Paradise.", "SAHIH AL-BUKHARI 574"],
+   ["Whoever misses Asr, it is as if he lost his family and his wealth.", "SAHIH AL-BUKHARI 552"]] },
+ maghrib: { en: "MAGHRIB", ar: "الْمَغْرِب", sky: ["#3A2958", "#B44E4A", "#F2994A"], sun: [540, 1330, 120, "#FFB46B"], dark: true, lines: [
+   ["Establish prayer at the two ends of the day. Good deeds erase bad deeds.", "QURAN 11:114"],
+   ["Five prayers a day are like bathing in a river at your door five times. Not a trace of dirt remains.", "SAHIH AL-BUKHARI 528"],
+   ["Indeed, prayer keeps you away from immorality and wrongdoing.", "QURAN 29:45"]] },
+ isha: { en: "ISHA", ar: "الْعِشَاء", sky: ["#0B1328", "#15234A", "#24366A"], sun: null, dark: true, lines: [
+   ["Whoever prays Isha in congregation, it is as if he prayed half the night.", "SAHIH MUSLIM 656"],
+   ["Establish prayer for My remembrance.", "QURAN 20:14"],
+   ["During the hours of the night, glorify your Lord, so that you may be content.", "QURAN 20:130"]] },
+};
+const [k, v] = (location.hash.slice(1) || "fajr-1").split("-"), p = P[k], line = p.lines[(+v || 1) - 1];
+const R = (n) => { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); };
+const fg = p.dark ? "#F4ECDD" : "#2C2418", sub = p.dark ? "rgba(244,236,221,.75)" : "rgba(44,36,24,.7)";
+// Mosque skyline on the horizon: central dome, two minarets, small domes, houses.
+const sil = p.dark ? "#141020" : "#3E3426";
+const mosque = `<g fill="${sil}"><rect x="0" y="1460" width="1080" height="460"/>
+  <path d="M380 1460 V1330 Q380 1220 540 1190 Q700 1220 700 1330 V1460 Z"/><rect x="532" y="1150" width="16" height="44"/><circle cx="540" cy="1146" r="10"/>
+  ${[[300, 1190], [780, 1190]].map(([x, top]) => `<rect x="${x - 18}" y="${top}" width="36" height="${1460 - top}"/><path d="M${x - 26} ${top} H${x + 26} L${x} ${top - 70} Z"/><rect x="${x - 26}" y="${top + 90}" width="52" height="14"/>`).join("")}
+  <path d="M190 1460 V1395 Q190 1350 240 1340 Q290 1350 290 1395 V1460 Z"/><path d="M790 1460 V1395 Q790 1350 840 1340 Q890 1350 890 1395 V1460 Z"/>
+  ${[[0, 1400, 140], [120, 1420, 80], [900, 1410, 90], [980, 1390, 100]].map(([x, y, w]) => `<rect x="${x}" y="${y}" width="${w}" height="${1460 - y}"/>`).join("")}</g>
+  ${p.dark ? [480, 520, 560, 600].map((x, i) => `<rect x="${x}" y="1380" width="18" height="34" rx="9" fill="#FFD27A" opacity=".85"/>`).join("") : ""}`;
+const stars = k === "isha" || k === "fajr" ? Array.from({ length: k === "isha" ? 90 : 30 }, (_, i) => `<circle cx="${(R(i + 1) * 1080).toFixed(0)}" cy="${(R(i + 50) * 1050).toFixed(0)}" r="${(1 + R(i + 9) * 2.4).toFixed(1)}" fill="#FFF" opacity="${(0.3 + R(i + 3) * 0.6).toFixed(2)}"/>`).join("") : "";
+const sun = p.sun ? `<circle cx="${p.sun[0]}" cy="${p.sun[1]}" r="${p.sun[2] * 4}" fill="url(#sg)"/><circle cx="${p.sun[0]}" cy="${p.sun[1]}" r="${p.sun[2]}" fill="${p.sun[3]}"/>` : `<path d="M880 150 A58 58 0 1 0 938 240 A45 45 0 1 1 880 150 Z" fill="#F4E4BF"/><circle cx="905" cy="195" r="190" fill="url(#mg)"/>`;
+document.getElementById("s").innerHTML = `<svg width="1080" height="1920" style="position:absolute;inset:0"><defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.sky[0]}"/><stop offset=".55" stop-color="${p.sky[1]}"/><stop offset=".75" stop-color="${p.sky[2]}"/></linearGradient>
+  <radialGradient id="sg"><stop offset="0" stop-color="${p.sun ? p.sun[3] : "#fff"}" stop-opacity=".55"/><stop offset="1" stop-color="${p.sun ? p.sun[3] : "#fff"}" stop-opacity="0"/></radialGradient>
+  <radialGradient id="mg"><stop offset="0" stop-color="#F4E4BF" stop-opacity=".25"/><stop offset="1" stop-color="#F4E4BF" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1080" height="1920" fill="url(#sky)"/>${stars}${sun}${mosque}</svg>
+  <div class="t" style="top:300px;font:600 32px/1 'Source Serif 4',serif;letter-spacing:.36em;color:${sub}">IT'S TIME FOR</div>
+  <div class="t" style="top:350px;font:800 168px/1 'Source Serif 4',serif;color:${fg};letter-spacing:.02em">${p.en}</div>
+  <div class="t" style="top:540px;font:400 96px/1.3 Amiri,serif;color:${fg};direction:rtl">${p.ar}</div>
+  <div class="card"><div class="q">“${line[0]}”</div><div class="rf">${line[1]}</div></div>
+  <div class="t" style="top:1560px;font:italic 500 40px/1.2 'Source Serif 4',serif;color:#F4ECDD">Pause. Pray. Then scroll.</div>
+  <div class="t" style="top:1622px;font:600 28px/1 'Source Serif 4',serif;letter-spacing:.12em;color:rgba(244,236,221,.8)">@yourbrand</div>`;
+window.seek = () => {}; window.addEventListener("load", async () => { await document.fonts.ready; window.__ready = true; });
+</script></body></html>

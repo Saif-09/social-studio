@@ -1,0 +1,11 @@
+{"n":"35","comment":"// Reel 35: Kamzor Mangal ke 5 ishaare, the reel 05 tier list (gussa, chot/thakaan, bhai-behen, zameen, himmat;\n// simple Mangalvar upay). Voice text in vo/reel35.txt. Mangal (Angaraka): 1842 Navagraha painting (public domain).",
+ "glow":"rgba(235,70,55,.34)","bg":"#1A0A0A","row":"#2B1513","rowLive":"#41201C",
+ "col":{"1":"#8EDB5A","2":"#D9E85E","3":"#FFD166","4":"#FFA14F","5":"#FF6B6B"},
+ "rows":{"5":["Chhoti baat pe *bada gussa*","Mangalvar: Hanuman Chalisa","fire",[0.85,5.0]],
+         "4":["Baar baar *chot*, thakaan","Mangalvar: laal masoor daan","bandage",[0.8,4.28]],
+         "3":["Bhai-behen se *anban*","Chhote bhai-behen ko meetha","siblings",[0.75,4.76]],
+         "2":["Zameen-ghar ke kaam *atke*","Hanuman ji ko gud-chana","land",[0.75,5.22]],
+         "1":["*Himmat* tootna","Mangal majboot = jeet","peak",[0.9,4.6]]},
+ "tease":"Aakhri wala sabse zaroori","hero":"angraka","title":"Kamzor Mangal ke <mark class=\"hl\">5 ishaare</mark>",
+ "ask":"<div class=\"ln\"><span>Aapke saath</span></div><div class=\"ln\"><span><mark>kitne</mark> ho rahe hain?</span></div>",
+ "chipsAt":[1.5,1.6,1.7,1.8,1.9,2.0],"end":"Mangal aapki kundli<br>mein <mark>kahan</mark> hai?","endTag":"Free kundli + upay: yourbrand.com"}

@@ -1,0 +1,420 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Amiri:wght@400;700&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="capbig.css">
+<style>
+:root{--gold:#E8B45A;--parch:#F2E8D5;--ink:#0B0F1A}
+#stage{background:#04060B}
+.cam{position:absolute;inset:0;transform-origin:50% 48%}
+.abs{position:absolute;left:0;top:0}
+.bcap{font-size:66px;-webkit-text-stroke:10px rgba(5,7,11,.94);font-family:Poppins,Amiri,sans-serif}
+.bcap b{color:var(--gold)}
+.al{display:inline-block;font:700 1.22em/1 Amiri,serif;color:var(--gold);vertical-align:-0.06em;padding:0 .04em}
+.bcap .al,.hook .h1 .al{-webkit-text-stroke:7px rgba(5,7,11,.94);paint-order:stroke fill}
+.hook .h1{font-size:92px;-webkit-text-stroke:12px rgba(5,7,11,.95)}
+.hook .h1 b{color:var(--gold)}
+.hook .h2{background:var(--gold);color:var(--ink)}
+.chip{display:inline-block;font:700 32px/1 Poppins;color:var(--parch);padding:16px 28px 14px;border-radius:999px;border:2px solid rgba(232,180,90,.55);background:rgba(6,8,14,.66);white-space:nowrap}
+.chip b{color:var(--gold)}
+.digit{display:inline-block;width:.62em;height:1em;overflow:hidden;vertical-align:top}
+.digit>div{display:flex;flex-direction:column}
+.big{font:900 300px/1 Poppins;letter-spacing:-.02em;color:#E8B45A;text-shadow:0 0 50px rgba(232,180,90,.45),0 6px 0 #7A5216}
+.big .digit span{display:block;height:1em;line-height:1}
+.q{font:900 120px/1.05 Poppins;color:#fff;-webkit-text-stroke:14px rgba(5,7,11,.95);paint-order:stroke fill;text-align:center}
+.q b{color:var(--gold)}
+.btn{display:inline-block;background:var(--gold);color:var(--ink);font:800 52px/1 Poppins;padding:30px 64px 28px;border-radius:999px}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script src="vo/reel02-timing.js"></script>
+<script>
+// faith brand reel 02: "The man who killed 99", Part 1 (Sahih Muslim 2766, Sahih al-Bukhari 3470).
+// All art is drawn here (SVG + CSS), no images. People are hooded silhouettes with no faces; angels are only light.
+const T = window.TIMES, CAPS = window.CAPS;
+window.DURATION = T[T.length - 1];
+const HANDLE = "@yourbrand";
+const NCH = [3, 3, 3, 2, 2, 3, 4, 3, 3, 3]; // caption chunks per line (cfg/02.json)
+const FIRST = NCH.map((_, i) => NCH.slice(0, i).reduce((a, b) => a + b, 0));
+const cs = (l, k) => CAPS[FIRST[l] + k][0]; // when chunk k of line l starts
+const AL = (s) => s.replace(/\bAllah\b/g, `<span class="al">اللّٰه</span>`);
+const W = 1080, H = 1920, TAU = Math.PI * 2, GOLD = "#E8B45A";
+const rng = (s) => () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+const f1 = (x) => x.toFixed(1);
+
+// ---------- drawing kit ----------
+function starfield(n, seed, maxY = 1250) {
+  const r = rng(seed); let a = "", b = "";
+  for (let i = 0; i < n; i++) {
+    const c = `<circle cx="${f1(r() * W)}" cy="${f1(r() * maxY)}" r="${(0.6 + r() * 1.9).toFixed(2)}" fill="#F2E8D5" opacity="${(0.25 + r() * 0.7).toFixed(2)}"/>`;
+    if (i % 2) a += c; else b += c;
+  }
+  return `<g class="stA">${a}</g><g class="stB">${b}</g>`;
+}
+function twinkle(el, abs) { $$(el, ".stA").forEach((g) => (g.style.opacity = 0.62 + 0.38 * Math.sin(abs * 2.3))); $$(el, ".stB").forEach((g) => (g.style.opacity = 0.62 + 0.38 * Math.cos(abs * 1.9))); }
+// A dune ridge: smooth sum of sines; y(x) gives the ground height for placing figures.
+function Ridge(y0, amp, seed, freq = 1) {
+  const r = rng(seed), ph = [r() * TAU, r() * TAU, r() * TAU];
+  const y = (x) => y0 + amp * (0.55 * Math.sin(x / 260 * freq + ph[0]) + 0.3 * Math.sin(x / 120 * freq + ph[1]) + 0.15 * Math.sin(x / 57 * freq + ph[2]));
+  let d = `M-160 ${H + 80}`;
+  for (let x = -160; x <= W + 160; x += 16) d += ` L${x} ${f1(y(x))}`;
+  return { d: d + ` L${W + 160} ${H + 80} Z`, y };
+}
+// Hooded traveller in silhouette, feet at (0,0), ~180 tall. p = walk phase, walk = 0 (still) .. 1, wind = hem flutter.
+function traveller(p, walk = 1, wind = 0, rim = GOLD) {
+  const s = Math.sin(p * TAU) * walk, bob = Math.abs(Math.sin(p * TAU)) * 4 * walk;
+  const h = (k) => f1(Math.sin(p * TAU * (walk ? 1 : 0) + k + wind * 3) * (4 * walk + 3 * Math.min(1, wind)));
+  const leg = (o) => `<path d="M${f1(-6 + o)} -26 L${f1(-8 + o * 1.4)} 0 L${f1(2 + o * 1.4)} 0 L${f1(5 + o)} -26 Z" fill="#04050A"/>`;
+  return `<g transform="translate(0 ${f1(-bob)})">${leg(s * 10)}${leg(-s * 10)}
+    <path d="M0 -182 C-19 -182 -27 -164 -27 -146 C-37 -138 -40 -120 -37 -102 L-47 -24 Q-23 ${f1(-12 + +h(0))} 0 ${f1(-17 + +h(1))} Q23 ${f1(-12 + +h(2))} 47 -24 L37 -102 C40 -120 37 -138 27 -146 C27 -164 19 -182 0 -182 Z" fill="#06070D"/>
+    <path d="M-27 -146 C-27 -164 -19 -182 0 -182 C19 -182 27 -164 27 -146 C37 -138 40 -120 37 -102" fill="none" stroke="${rim}" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M38 -108 L${f1(52 + s * 5)} 0" stroke="#090B12" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M38 -108 L${f1(52 + s * 5)} 0" stroke="${rim}" stroke-opacity=".35" stroke-width="1.6" stroke-linecap="round"/></g>`;
+}
+const glow = (x, y, r, rgba, cls = "") => `<div class="${cls}" style="position:absolute;left:${x - r}px;top:${y - r}px;width:${2 * r}px;height:${2 * r}px;border-radius:50%;background:radial-gradient(circle,${rgba},rgba(0,0,0,0) 68%)"></div>`;
+function sandMotes(n, seed, y0, y1) { const r = rng(seed); return Array.from({ length: n }, () => [r() * W, y0 + r() * (y1 - y0), 0.6 + r() * 1.8, 30 + r() * 90, r()]); }
+const motesSVG = (cls) => `<svg class="abs ${cls}" width="${W}" height="${H}"></svg>`;
+function drawMotes(svg, list, t, color = "#E9D2A4", dir = 1) {
+  svg.innerHTML = list.map(([x, y, r, sp, ph]) => {
+    const xx = ((x + dir * t * sp) % (W + 40) + W + 40) % (W + 40) - 20, yy = y + Math.sin(t * 0.8 + ph * 9) * 12;
+    return `<circle cx="${f1(xx)}" cy="${f1(yy)}" r="${r.toFixed(2)}" fill="${color}" opacity="${(0.25 + 0.5 * ph).toFixed(2)}"/>`;
+  }).join("");
+}
+// Clay oil lamp (origin = body centre) and its flame at the spout.
+const LAMP = `<ellipse cx="0" cy="0" rx="74" ry="26" fill="#6A4428"/><path d="M-74 0 Q-72 38 0 40 Q72 38 74 0 Z" fill="#43291A"/>
+  <path d="M52 -8 Q102 -14 118 -30 Q112 -6 62 14 Z" fill="#55361F"/><path d="M-72 -4 Q-110 -4 -104 -34 Q-96 -50 -78 -34" fill="none" stroke="#43291A" stroke-width="11" stroke-linecap="round"/>
+  <ellipse cx="0" cy="-5" rx="22" ry="7" fill="#1C110A"/><path d="M-60 6 Q0 18 60 6" stroke="#8A5E3A" stroke-width="3" fill="none" opacity=".6"/>`;
+const flame = (id, k, sway) => `<g transform="translate(118 -32) scale(${(0.0001 + k).toFixed(3)}) skewX(${f1(sway)})"><path d="M0 0 C-15 -10 -13 -42 0 -68 C13 -42 15 -10 0 0 Z" fill="url(#${id})"/><path d="M0 -5 C-6 -11 -5 -26 0 -38 C5 -26 6 -11 0 -5 Z" fill="#FFF7DE"/></g>`;
+const flameDef = (id) => `<defs><linearGradient id="${id}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF8A2A"/><stop offset=".5" stop-color="#FFC24A"/><stop offset="1" stop-color="#FFE9A8" stop-opacity=".9"/></linearGradient></defs>`;
+// A town of flat-roofed houses on a baseline; lit = share of lit windows.
+function town(x0, x1, base, seed, lit, wall, win) {
+  const r = rng(seed); let s = "", x = x0;
+  while (x < x1) {
+    const bw = 44 + r() * 64, bh = 50 + r() * 110 + (r() < 0.15 ? 80 : 0);
+    s += `<rect x="${f1(x)}" y="${f1(base - bh)}" width="${f1(bw)}" height="${f1(bh + 4)}" fill="${wall}"/>`;
+    if (r() < 0.4) s += `<rect x="${f1(x - 3)}" y="${f1(base - bh - 6)}" width="${f1(bw + 6)}" height="7" fill="${wall}"/>`;
+    for (let wy = base - bh + 16; wy < base - 18; wy += 30) for (let wx = x + 9; wx < x + bw - 12; wx += 22) if (r() < lit) s += `<rect class="win" x="${f1(wx)}" y="${f1(wy)}" width="9" height="15" rx="4.5" fill="${win}"/>`;
+    x += bw + 3 + (r() < 0.2 ? 14 : 0);
+  }
+  return s;
+}
+
+// ---------- shots ----------
+const TR = 0.35;
+function shot(i, a, b, html, upd, cam) {
+  scene(a, b + TR, () => `<div class="cam">${html}</div>`, (el, t, abs) => {
+    const d = b + TR - a, p = pr(t, 0, d, E.io), inn = i === 0 ? 1 : pr(t, 0, TR, E.out), out = pr(t, d - TR, d, E.in);
+    const [z0, z1, x0, x1, y0, y1] = cam, z = mix(z0, z1, p) * mix(1.14, 1, inn) * mix(1, 1.08, out);
+    const c = $(el, ".cam");
+    c.style.transform = `translate(${f1(mix(x0, x1, p))}px,${f1(mix(y0, y1, p))}px) scale(${z.toFixed(4)})`;
+    el.style.opacity = inn; c.style.filter = inn < 1 ? `blur(${mix(14, 0, inn).toFixed(1)}px)` : "none";
+    upd(el, t, abs);
+  }, 2 + i);
+}
+
+// Shot 0 (hook): a moonlit desert, a lone hooded man from behind, 99 marks filling the sky.
+{
+  const far = Ridge(1080, 40, 3, 0.8), mid = Ridge(1250, 22, 8, 0.5), near = Ridge(1560, 70, 21, 0.7);
+  // 99 tally marks: 19 full groups of five (four strokes and a slash) and four strokes.
+  const marks = [];
+  for (let g = 0; g < 20; g++) {
+    const ox = 175 + (g % 5) * 160, oy = 200 + Math.floor(g / 5) * 78;
+    for (let i = 0; i < 4 && marks.length < 99; i++) marks.push(`M${ox + i * 22} ${oy} l0 52`);
+    if (g < 19) marks.push(`M${ox - 10} ${oy + 40} L${ox + 76} ${oy + 10}`);
+  }
+  const motes = sandMotes(70, 5, 1150, 1700);
+  shot(0, T[0], T[1], `
+    <div class="abs" style="width:${W}px;height:${H}px;background:linear-gradient(180deg,#070A16 0%,#101A33 45%,#2A2C46 64%,#151729 80%)"></div>
+    <svg class="abs" width="${W}" height="${H}">${starfield(160, 4, 1100)}</svg>
+    ${glow(540, 760, 470, "rgba(255,226,170,.32)")}
+    <svg class="abs" width="${W}" height="${H}"><circle cx="540" cy="760" r="215" fill="#F3E2BD"/><circle cx="470" cy="700" r="38" fill="#E3CFA6" opacity=".55"/><circle cx="620" cy="840" r="26" fill="#E3CFA6" opacity=".5"/><circle cx="600" cy="660" r="16" fill="#E3CFA6" opacity=".5"/></svg>
+    <svg class="abs marks" width="${W}" height="${H}">${marks.map((d) => `<path class="mk" d="${d}" stroke="${GOLD}" stroke-width="6" stroke-linecap="round" opacity="0"/>`).join("")}</svg>
+    <svg class="abs p1" width="${W}" height="${H}"><path d="${far.d}" fill="#1B1D33"/></svg>
+    <svg class="abs p2" width="${W}" height="${H}"><path d="${mid.d}" fill="#0C0E1C"/><g class="fig" transform="translate(540 ${f1(mid.y(540) + 6)}) scale(2.4)"></g></svg>
+    <svg class="abs p3" width="${W}" height="${H}"><path d="${near.d}" fill="#07080F"/></svg>
+    ${motesSVG("mo")}`,
+    (el, t, abs) => {
+      twinkle(el, abs);
+      $$(el, ".mk").forEach((m, k) => (m.style.opacity = pr(t, 0.05 + k * 0.014, 0.12 + k * 0.014) * (0.75 + 0.25 * Math.sin(abs * 3 + k))));
+      $(el, ".p1").style.transform = `translateX(${f1(-t * 4)}px)`; $(el, ".p3").style.transform = `translateX(${f1(-t * 10)}px)`;
+      $(el, ".fig").innerHTML = traveller(0, 0, abs);
+      drawMotes($(el, ".mo"), motes, abs);
+    }, [1.06, 1.0, 0, 0, -30, 0]);
+}
+
+// Shot 1: he crosses the dunes toward a monk's tower with one lit window.
+{
+  const far = Ridge(1180, 30, 12, 0.7), mid = Ridge(1360, 50, 31), near = Ridge(1560, 60, 40, 0.8);
+  const hill = `M560 1240 C700 1100 860 1060 1010 1150 C1060 1180 1120 1220 1200 1260 L1200 1400 L560 1400 Z`;
+  const motes = sandMotes(50, 9, 1200, 1700);
+  shot(1, T[1], T[2], `
+    <div class="abs" style="width:${W}px;height:${H}px;background:linear-gradient(180deg,#070A16 0%,#0F1A30 50%,#24304A 70%,#141A2A 82%)"></div>
+    <svg class="abs" width="${W}" height="${H}">${starfield(130, 14, 1100)}<circle cx="230" cy="420" r="70" fill="#F3E2BD" opacity=".92"/></svg>
+    ${glow(230, 420, 220, "rgba(255,226,170,.22)")}
+    <svg class="abs p1" width="${W}" height="${H}"><path d="${far.d}" fill="#1B2136"/></svg>
+    <svg class="abs" width="${W}" height="${H}"><path d="${hill}" fill="#141829"/>
+      <g transform="translate(880 1078)"><rect x="-38" y="-170" width="76" height="176" fill="#0B0D18"/><path d="M-46 -170 L0 -214 L46 -170 Z" fill="#0B0D18"/>
+      <path class="tw" d="M-12 -120 L-12 -84 L12 -84 L12 -120 A12 12 0 0 0 -12 -120 Z" fill="#FFC56B"/><rect x="-14" y="-30" width="28" height="36" rx="12" fill="#05060B"/></g></svg>
+    ${glow(880, 976, 120, "rgba(255,190,100,.55)", "twg")}
+    <svg class="abs p2" width="${W}" height="${H}"><path d="${mid.d}" fill="#10142A"/><g class="steps"></g><g class="fig"></g></svg>
+    <svg class="abs p3" width="${W}" height="${H}"><path d="${near.d}" fill="#07080F"/></svg>
+    ${motesSVG("mo")}`,
+    (el, t, abs) => {
+      twinkle(el, abs);
+      const d = T[2] - T[1], x = mix(120, 560, pr(t, 0, d + TR, E.lin)), y = mid.y(x), ph = t * 1.1;
+      $(el, ".fig").setAttribute("transform", `translate(${f1(x)} ${f1(y)}) scale(1.25)`);
+      $(el, ".fig").innerHTML = traveller(ph, 1, abs);
+      let st = ""; for (let sx = x - 40; sx > 60; sx -= 34) st += `<ellipse cx="${f1(sx)}" cy="${f1(mid.y(sx) + 2)}" rx="7" ry="2.6" fill="#05060B" opacity="${f1(0.15 + 0.5 * (sx / x))}"/>`;
+      $(el, ".steps").innerHTML = st;
+      const fl = 0.85 + 0.15 * Math.sin(abs * 9) * Math.sin(abs * 3.7);
+      $(el, ".tw").style.opacity = fl; $(el, ".twg").style.opacity = fl;
+      $(el, ".p1").style.transform = `translateX(${f1(-t * 5)}px)`; $(el, ".p3").style.transform = `translateX(${f1(-t * 14)}px)`;
+      drawMotes($(el, ".mo"), motes, abs);
+    }, [1.0, 1.1, 0, -40, 0, -20]);
+}
+
+// Shot 2: inside the tower. One lamp, and two shadows on the stone wall: the man, and the hooded monk.
+function stoneWall(seed) {
+  const r = rng(seed); let s = "";
+  for (let y = -40, row = 0; y < 1500; y += 74, row++) {
+    let x = row % 2 ? -70 : 0;
+    while (x < W + 40) { const w = 110 + r() * 90, c = Math.floor(30 + r() * 12); s += `<rect x="${f1(x + 4)}" y="${y + 4}" width="${f1(w - 8)}" height="66" rx="12" fill="rgb(${c + 10},${c + 3},${c - 4})"/>`; x += w; }
+  }
+  return s;
+}
+const SHADOW_MAN = `<path d="M0 -300 C-52 -300 -78 -258 -74 -214 C-72 -186 -60 -164 -44 -152 C-118 -136 -168 -96 -184 -20 L-190 60 L190 60 L184 -20 C168 -96 118 -136 44 -152 C60 -164 72 -186 74 -214 C78 -258 52 -300 0 -300 Z"/>`;
+const SHADOW_MONK = `<path d="M0 -330 C-40 -330 -92 -300 -100 -232 C-104 -196 -96 -170 -80 -150 C-140 -128 -178 -86 -190 -20 L-196 60 L196 60 L190 -20 C178 -86 140 -128 80 -150 C96 -170 104 -196 100 -232 C92 -300 40 -330 0 -330 Z"/>`;
+{
+  shot(2, T[2], T[3], `
+    <svg class="abs" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#140F0C"/>${stoneWall(2)}</svg>
+    <svg class="abs" width="${W}" height="${H}"><path d="M820 300 L820 620 L1000 620 L1000 300 A90 90 0 0 0 820 300 Z" fill="#0C1428"/><path d="M820 300 L820 620 L1000 620 L1000 300 A90 90 0 0 0 820 300 Z" fill="none" stroke="#2A2018" stroke-width="18"/>
+      <circle cx="935" cy="380" r="34" fill="#F3E2BD" opacity=".9"/><path class="beam" d="M820 330 L1000 330 L760 1400 L320 1400 Z" fill="url(#bm)" opacity=".18"/>
+      <defs><linearGradient id="bm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9DB6E8"/><stop offset="1" stop-color="#9DB6E8" stop-opacity="0"/></linearGradient></defs></svg>
+    <svg class="abs shm" width="${W}" height="${H}" style="filter:blur(7px)"><g class="s1" transform="translate(330 900)" fill="#050404" opacity=".72">${SHADOW_MAN}</g><g class="s2" transform="translate(760 900)" fill="#050404" opacity=".72">${SHADOW_MONK}</g></svg>
+    <div class="lit abs" style="width:${W}px;height:${H}px"></div>
+    <svg class="abs" width="${W}" height="${H}"><rect x="-20" y="1230" width="${W + 40}" height="700" fill="#2B1B11"/><rect x="-20" y="1230" width="${W + 40}" height="14" fill="#4A3020"/>
+      ${flameDef("fl2")}<g transform="translate(450 1205) scale(1.6)">${LAMP}<g class="fl"></g></g></svg>
+    ${glow(640, 1110, 320, "rgba(255,190,90,.5)", "fg")}`,
+    (el, t, abs) => {
+      const noAt = cs(2, 2), jolt = pr(abs, noAt, noAt + 0.15) * (1 - pr(abs, noAt + 0.15, noAt + 0.7));
+      const fk = 1 + 0.08 * Math.sin(abs * 13) + 0.05 * Math.sin(abs * 29) - 0.3 * jolt, sway = 6 * Math.sin(abs * 5) + 18 * jolt * Math.sin(abs * 40);
+      $(el, ".fl").innerHTML = flame("fl2", fk, sway);
+      $(el, ".fg").style.opacity = 0.75 + 0.25 * fk; $(el, ".fg").style.scale = 0.9 + 0.1 * fk;
+      $(el, ".lit").style.background = `radial-gradient(circle at 640px 1110px, rgba(255,170,80,${(0.18 * fk).toFixed(3)}) 0, rgba(0,0,0,0) 34%, rgba(0,0,0,.62) 78%)`;
+      $(el, ".s1").setAttribute("transform", `translate(330 900) scale(${(1 + 0.02 * Math.sin(abs * 13)).toFixed(3)}) skewX(${f1(-sway * 0.3)})`);
+      $(el, ".s2").setAttribute("transform", `translate(760 900) scale(${(1 + 0.02 * Math.sin(abs * 11) + 0.06 * jolt).toFixed(3)}) skewX(${f1(-sway * 0.3)})`);
+    }, [1.12, 1.0, 0, 0, 40, 0]);
+}
+
+// Shot 3: the lamp goes out, smoke rises, and the count turns from 99 to 100.
+{
+  const smoke = (t) => Array.from({ length: 3 }, (_, k) => {
+    const o = t - k * 0.35; if (o < 0) return "";
+    let d = `M118 -40`; for (let y = 0; y < 360; y += 20) d += ` L${f1(118 + Math.sin(y / 40 + o * 2 + k) * (8 + y / 12))} ${-40 - y - o * 40}`;
+    return `<path d="${d}" fill="none" stroke="#B9B2A6" stroke-width="${6 - k}" stroke-linecap="round" opacity="${f1(Math.max(0, 0.35 - o * 0.09))}"/>`;
+  }).join("");
+  const col = (from, to, cls) => `<span class="digit"><div class="${cls}"><span>${from}</span><span>${to}</span></div></span>`;
+  shot(3, T[3], T[4], `
+    <svg class="abs" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#140F0C"/>${stoneWall(7)}</svg>
+    <div class="lit abs" style="width:${W}px;height:${H}px"></div>
+    <svg class="abs" width="${W}" height="${H}"><rect x="-20" y="1320" width="${W + 40}" height="700" fill="#2B1B11"/><rect x="-20" y="1320" width="${W + 40}" height="14" fill="#4A3020"/>
+      ${flameDef("fl3")}<g transform="translate(400 1290) scale(1.8)">${LAMP}<g class="fl"></g><g class="sm"></g></g></svg>
+    ${glow(612, 1200, 360, "rgba(255,190,90,.5)", "fg")}
+    <div class="dark abs" style="width:${W}px;height:${H}px;background:#030305;opacity:0"></div>
+    <div class="odo" style="position:absolute;left:0;right:0;top:470px;text-align:center;opacity:0"><div class="big">${col("&nbsp;", "1", "c0")}${col("9", "0", "c1")}${col("9", "0", "c2")}</div></div>`,
+    (el, t, abs) => {
+      const outAt = cs(3, 0) + 0.9, k = 1 - pr(abs, outAt, outAt + 0.35, E.in);
+      $(el, ".fl").innerHTML = k > 0.01 ? flame("fl3", k * (1 + 0.08 * Math.sin(abs * 13)), 6 * Math.sin(abs * 5)) : "";
+      $(el, ".sm").innerHTML = abs > outAt + 0.2 ? smoke(abs - outAt - 0.2) : "";
+      $(el, ".fg").style.opacity = k; $(el, ".lit").style.background = `radial-gradient(circle at 612px 1200px, rgba(255,170,80,${f1(0.18 * k)}) 0, rgba(0,0,0,0) 34%, rgba(0,0,0,${f1(0.6 + 0.3 * (1 - k))}) 78%)`;
+      $(el, ".dark").style.opacity = 0.75 * (1 - k);
+      const od = $(el, ".odo"), at = cs(3, 1) - 0.35;
+      od.style.opacity = pr(abs, at - 0.6, at - 0.2); od.style.scale = mix(0.9, 1, pr(abs, at - 0.6, at, E.expo));
+      const roll = pr(abs, at, at + 0.55, E.back);
+      ["c0", "c1", "c2"].forEach((c, i) => ($(el, "." + c).style.transform = `translateY(${f1(-roll * 300)}px)`));
+    }, [1.0, 1.08, 0, 0, 0, -20]);
+}
+
+// Shot 4: in the dark one ember stays alight and rises; dawn opens on a road to a lit town.
+{
+  const far = Ridge(1260, 28, 52, 0.6), near = Ridge(1520, 50, 53, 0.8);
+  shot(4, T[4], T[5], `
+    <div class="sky abs" style="width:${W}px;height:${H}px;background:linear-gradient(180deg,#0A1324 0%,#16294A 52%,#7A5A52 70%,#C98A55 76%,#1A1A26 84%)"></div>
+    <svg class="abs" width="${W}" height="${H}">${starfield(90, 33, 900)}</svg>
+    <svg class="abs" width="${W}" height="${H}"><path d="${far.d}" fill="#1E2236"/><g>${town(700, 1080, 1262, 6, 0.55, "#141726", "#FFC56B")}</g></svg>
+    ${glow(880, 1200, 260, "rgba(255,200,120,.35)")}
+    <svg class="abs" width="${W}" height="${H}"><path d="${near.d}" fill="#090A12"/><path d="M-20 1700 C300 1600 520 1430 760 1300" fill="none" stroke="#3A3036" stroke-width="40" stroke-linecap="round" opacity=".55"/><g class="fig"></g></svg>
+    <div class="black abs" style="width:${W}px;height:${H}px;background:#020205"></div>
+    ${glow(540, 900, 140, "rgba(255,170,70,.9)", "ember")}
+    <div class="emb" style="position:absolute;left:532px;top:892px;width:16px;height:16px;border-radius:50%;background:#FFE2A0;box-shadow:0 0 30px 10px rgba(255,170,70,.8)"></div>`,
+    (el, t, abs) => {
+      twinkle(el, abs);
+      const open = pr(t, 0.5, 1.9, E.io), ey = mix(900, 520, pr(t, 0.2, 2.2, E.io));
+      $(el, ".black").style.opacity = 1 - open;
+      ["ember", "emb"].forEach((c) => { const n = $(el, "." + c); n.style.translate = `0 ${f1(ey - 900)}px`; n.style.opacity = (1 - 0.6 * open) * (0.85 + 0.15 * Math.sin(abs * 7)); });
+      const x = mix(140, 470, pr(t, 0.8, T[5] - T[4] + TR, E.lin)), y = mix(1650, 1400, (x - 140) / 330);
+      $(el, ".fig").setAttribute("transform", `translate(${f1(x)} ${f1(y)}) scale(${f1(mix(1.6, 1.15, (x - 140) / 330))})`);
+      $(el, ".fig").innerHTML = traveller(t * 1.1, 1, abs, "#F0B070");
+    }, [1.0, 1.06, 0, 0, 0, 0]);
+}
+
+// Shot 5: the scholar's study. Shelves of books, an open book on a lectern pouring light; "Yes" makes it bloom.
+function shelves(seed) {
+  const r = rng(seed), cols = ["#5E2A2A", "#2F4A4A", "#7A5A2A", "#3D4A2A", "#4A3A5A", "#6B3E26", "#28394D", "#5A4A2A"];
+  let s = "";
+  for (let row = 0; row < 7; row++) {
+    const base = 260 + row * 220; s += `<rect x="0" y="${base}" width="${W}" height="24" fill="#2A1A10"/><rect x="0" y="${base}" width="${W}" height="4" fill="#4A3020"/>`;
+    let x = 14;
+    while (x < W - 14) {
+      const w = 24 + r() * 30, h = 120 + r() * 70, c = cols[Math.floor(r() * cols.length)];
+      if (r() < 0.07) { s += `<rect x="${f1(x)}" y="${f1(base - 28)}" width="120" height="28" rx="3" fill="${c}"/>`; x += 130; continue; }
+      s += `<rect x="${f1(x)}" y="${f1(base - h)}" width="${f1(w)}" height="${f1(h)}" rx="3" fill="${c}" opacity="${(0.7 + r() * 0.3).toFixed(2)}"/><rect x="${f1(x + 4)}" y="${f1(base - h + 16)}" width="${f1(w - 8)}" height="4" fill="#C9A15A" opacity=".45"/><rect x="${f1(x + 4)}" y="${f1(base - 26)}" width="${f1(w - 8)}" height="4" fill="#C9A15A" opacity=".35"/>`;
+      x += w + 3;
+    }
+  }
+  return s;
+}
+{
+  const rays = Array.from({ length: 13 }, (_, k) => (-95 + k * 15));
+  const motes = sandMotes(60, 77, 500, 1300);
+  shot(5, T[5], T[6], `
+    <svg class="abs" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#120C08"/>${shelves(5)}</svg>
+    <div class="abs" style="width:${W}px;height:${H}px;background:radial-gradient(circle at 540px 1060px, rgba(0,0,0,0) 0, rgba(0,0,0,.35) 30%, rgba(0,0,0,.86) 70%)"></div>
+    <svg class="abs rays" width="${W}" height="${H}" style="mix-blend-mode:screen"><defs><linearGradient id="ry" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FFD98A" stop-opacity=".55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></linearGradient></defs>
+      <g class="rg" transform="translate(540 1080)">${rays.map((a) => `<path d="M-14 0 L14 0 L70 -900 L-70 -900 Z" fill="url(#ry)" transform="rotate(${a})"/>`).join("")}</g></svg>
+    ${glow(540, 1070, 330, "rgba(255,214,140,.55)", "bg5")}
+    <svg class="abs" width="${W}" height="${H}">
+      <path d="M380 1500 L700 1500 L640 1180 L440 1180 Z" fill="#2E1D12"/><path d="M360 1180 L720 1180 L740 1210 L340 1210 Z" fill="#43291A"/>
+      <path d="M540 1112 C470 1088 400 1090 330 1112 L330 1196 C400 1176 470 1176 540 1198 Z" fill="#F2E3C2"/><path d="M540 1112 C610 1088 680 1090 750 1112 L750 1196 C680 1176 610 1176 540 1198 Z" fill="#EAD8B2"/>
+      ${[0, 1, 2, 3].map((k) => `<path d="M${352} ${1124 + k * 16} C400 ${1110 + k * 16} 470 ${1110 + k * 16} 522 ${1124 + k * 16}" stroke="#9A7A4A" stroke-width="3" fill="none" opacity=".55"/><path d="M558 ${1124 + k * 16} C610 ${1110 + k * 16} 680 ${1110 + k * 16} 728 ${1124 + k * 16}" stroke="#9A7A4A" stroke-width="3" fill="none" opacity=".55"/>`).join("")}
+      <path d="M540 1112 L540 1198" stroke="#B89A6A" stroke-width="3"/></svg>
+    ${motesSVG("mo")}`,
+    (el, t, abs) => {
+      const yes = pr(abs, cs(5, 0) + 0.5, cs(5, 0) + 0.9, E.out);
+      $(el, ".rg").setAttribute("transform", `translate(540 1080) rotate(${f1(Math.sin(abs * 0.4) * 4)}) scale(${(0.85 + 0.25 * yes).toFixed(3)})`);
+      $(el, ".rays").style.opacity = 0.45 + 0.55 * yes; $(el, ".bg5").style.opacity = 0.6 + 0.4 * yes; $(el, ".bg5").style.scale = 1 + 0.25 * yes;
+      drawMotes($(el, ".mo"), motes, abs, "#FFE2A8", 0.3);
+    }, [1.12, 1.0, 0, 0, 60, 0]);
+}
+
+// Shots 6-8 share one landscape: his land on the left, the land of worship on the right, a path between them.
+const GROUND = 1262, LX = 300, RX = 780, MIDX = 540;
+const pathY = (x) => GROUND + 6 + 26 * Math.sin(Math.PI * (x - LX) / (RX - LX));
+const PATH_D = (() => { let d = `M${LX} ${GROUND + 6}`; for (let x = LX; x <= RX; x += 10) d += ` L${x} ${f1(pathY(x))}`; return d; })();
+function landscape(seed) {
+  const far = Ridge(1180, 26, 61, 0.6), fore = Ridge(1560, 60, 62, 0.8);
+  return `<div class="abs" style="width:${W}px;height:${H}px;background:linear-gradient(180deg,#060912 0%,#0E1730 48%,#1E2742 62%,#11141F 70%)"></div>
+    <svg class="abs" width="${W}" height="${H}">${starfield(150, seed, 1100)}</svg>
+    <svg class="abs" width="${W}" height="${H}"><path d="${far.d}" fill="#171B2D"/>
+      <rect x="0" y="${GROUND}" width="${W}" height="700" fill="#0E0F18"/>
+      <g opacity=".95">${town(-10, LX, GROUND, 17, 0.12, "#0A0A10", "#C2452E")}</g>
+      <g>${town(RX, W + 10, GROUND, 23, 0.6, "#151828", "#FFC56B")}</g>
+      <path class="pth" d="${PATH_D}" fill="none" stroke="#C9A97A" stroke-width="5" stroke-dasharray="14 12" stroke-linecap="round" opacity=".75"/>
+      <path d="${fore.d}" fill="#06070C"/></svg>
+    ${glow(150, 1180, 200, "rgba(150,40,30,.25)")}${glow(930, 1170, 260, "rgba(255,200,120,.32)")}`;
+}
+{
+  shot(6, T[6], T[7], `${landscape(71)}
+    <div class="lr" style="position:absolute;left:660px;top:1000px;width:400px;text-align:center"><span class="chip">Land of <b>worship</b></span></div>
+    <div class="ll" style="position:absolute;left:-30px;top:1000px;width:400px;text-align:center"><span class="chip" style="border-color:rgba(194,69,46,.6)">His land</span></div>`,
+    (el, t, abs) => {
+      twinkle(el, abs);
+      const pth = $(el, ".pth"), L = 560; pth.style.strokeDasharray = `14 12`; pth.style.opacity = 0.75 * pr(abs, cs(6, 0), cs(6, 0) + 0.8);
+      const r = $(el, ".lr"), l = $(el, ".ll");
+      r.style.opacity = pr(abs, cs(6, 1), cs(6, 1) + 0.25); r.style.scale = mix(0.8, 1, pr(abs, cs(6, 1), cs(6, 1) + 0.35, E.back));
+      l.style.opacity = pr(abs, cs(6, 2), cs(6, 2) + 0.25); l.style.scale = mix(0.8, 1, pr(abs, cs(6, 2), cs(6, 2) + 0.35, E.back));
+      $$(el, ".win").forEach((w, k) => (w.style.opacity = 0.75 + 0.25 * Math.sin(abs * 2 + k * 1.7)));
+    }, [1.05, 1.12, 0, 0, -120, -190]);
+}
+{
+  shot(7, T[7], T[8], `${landscape(71)}<svg class="abs" width="${W}" height="${H}"><g class="steps"></g><g class="fig"></g>
+      <g class="half" opacity="0"><path d="M${MIDX} ${GROUND - 30} L${MIDX} ${GROUND + 70}" stroke="${GOLD}" stroke-width="3" stroke-dasharray="6 6"/></g></svg>
+    <div class="hl" style="position:absolute;left:${MIDX - 200}px;top:1100px;width:400px;text-align:center;opacity:0"><span class="chip">Halfway</span></div>
+    <div class="dim abs" style="width:${W}px;height:${H}px;background:#000;opacity:0"></div>`,
+    (el, t, abs) => {
+      twinkle(el, abs);
+      const halfAt = cs(7, 1), deathAt = cs(7, 2);
+      const x = mix(LX + 10, MIDX, pr(abs, T[7], halfAt + 0.3, E.out)), walking = abs < halfAt + 0.3 ? 1 : Math.max(0, 1 - (abs - halfAt - 0.3) * 3);
+      const fall = pr(abs, deathAt + 0.2, deathAt + 1.4, E.io);
+      $(el, ".fig").setAttribute("transform", `translate(${f1(x)} ${f1(pathY(x))}) scale(0.62) rotate(${f1(fall * 82)}) scale(1 ${(1 - 0.12 * pr(abs, deathAt, deathAt + 0.3)).toFixed(3)})`);
+      $(el, ".fig").innerHTML = traveller((abs - T[7]) * 1.2, walking, abs);
+      let st = ""; for (let sx = x - 22; sx > LX; sx -= 20) st += `<ellipse cx="${f1(sx)}" cy="${f1(pathY(sx) + 1)}" rx="4" ry="1.6" fill="#C9A97A" opacity=".35"/>`;
+      $(el, ".steps").innerHTML = st;
+      $(el, ".half").setAttribute("opacity", f1(pr(abs, halfAt, halfAt + 0.3)));
+      const hl = $(el, ".hl"); hl.style.opacity = pr(abs, halfAt, halfAt + 0.25) * (1 - pr(abs, deathAt + 0.4, deathAt + 0.8));
+      $(el, ".dim").style.opacity = 0.35 * pr(abs, deathAt, deathAt + 1.2);
+      $$(el, ".win").forEach((w, k) => (w.style.opacity = 0.75 + 0.25 * Math.sin(abs * 2 + k * 1.7)));
+    }, [1.9, 2.3, 0, 0, -380, -520]);
+}
+// Shot 8 (and line 9): the sky over him splits, warm light from the right, cold from the left. Light only, no figures.
+{
+  const rays = (n, a0, a1) => Array.from({ length: n }, (_, k) => a0 + (a1 - a0) * k / (n - 1));
+  shot(8, T[8], T[10], `${landscape(71)}<svg class="abs" width="${W}" height="${H}"><g transform="translate(${MIDX} ${f1(pathY(MIDX))}) scale(0.62) rotate(82) scale(1 .88)">${traveller(0, 0, 0)}</g></svg>
+    <div class="cold abs" style="width:${W}px;height:${H}px;background:radial-gradient(ellipse at 0% 0%, rgba(90,120,190,.55) 0, rgba(40,60,110,.25) 30%, rgba(0,0,0,0) 62%);mix-blend-mode:screen"></div>
+    <div class="warm abs" style="width:${W}px;height:${H}px;background:radial-gradient(ellipse at 100% 0%, rgba(255,214,140,.7) 0, rgba(255,180,90,.28) 30%, rgba(0,0,0,0) 62%);mix-blend-mode:screen"></div>
+    <svg class="abs" width="${W}" height="${H}" style="mix-blend-mode:screen;filter:blur(5px)"><defs>
+      <linearGradient id="wr" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD98A" stop-opacity=".38"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></linearGradient>
+      <linearGradient id="cr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7F92C8" stop-opacity=".34"/><stop offset="1" stop-color="#8FA8E0" stop-opacity="0"/></linearGradient></defs>
+      <g class="wR" transform="translate(1120 -60)">${rays(5, 32, 52).map((a) => `<path d="M0 0 L-24 0 L-60 1500 L40 1500 Z" fill="url(#wr)" transform="rotate(${a})"/>`).join("")}</g>
+      <g class="cR" transform="translate(-40 -60)">${rays(5, -52, -32).map((a) => `<path d="M0 0 L24 0 L60 1500 L-40 1500 Z" fill="url(#cr)" transform="rotate(${a})"/>`).join("")}</g></svg>
+    ${glow(MIDX, 1250, 120, "rgba(255,240,210,.35)", "soul")}`,
+    (el, t, abs) => {
+      twinkle(el, abs);
+      const w = pr(abs, cs(8, 0) + 0.2, cs(8, 0) + 1.0), c = pr(abs, cs(8, 1) + 0.2, cs(8, 1) + 1.0), dsp = pr(abs, cs(8, 2), cs(8, 2) + 0.4);
+      const pulseW = 1 - 0.35 * dsp * (0.5 + 0.5 * Math.sin(abs * 3.2)), pulseC = 1 - 0.35 * dsp * (0.5 - 0.5 * Math.sin(abs * 3.2));
+      $(el, ".warm").style.opacity = w * pulseW; $(el, ".wR").style.opacity = w * pulseW;
+      $(el, ".cold").style.opacity = c * pulseC; $(el, ".cR").style.opacity = c * pulseC;
+      $(el, ".wR").setAttribute("transform", `translate(1120 -60) rotate(${f1(Math.sin(abs * 0.5) * 3)})`);
+      $(el, ".cR").setAttribute("transform", `translate(-40 -60) rotate(${f1(-Math.sin(abs * 0.45) * 3)})`);
+      $(el, ".soul").style.opacity = 0.5 + 0.3 * Math.sin(abs * 2);
+    }, [1.05, 1.0, 0, 0, 20, 40]);
+}
+
+// ---------- overlays ----------
+// Hook text: readable from frame 1.
+scene(0, T[1] + 0.2, () => `<div class="hook" style="top:1200px"><div class="h2">Part 1 · A true story, Sahih Muslim</div>
+  <div class="h1" style="font-size:86px">He killed <b>99 people</b>.<br>Could he be <b>forgiven</b>?</div></div>`,
+  (el, t) => { el.style.opacity = 1 - pr(t, T[1] - 0.15, T[1] + 0.2); $(el, ".h1").style.scale = mix(1.06, 1, pr(t, 0, 0.4, E.expo)); $(el, ".h2").style.scale = mix(0.7, 1, pr(t, 0.3, 0.6, E.back)); $(el, ".h2").style.opacity = pr(t, 0.3, 0.4); }, 31);
+// Series pill on top after the hook.
+scene(T[1], T[9], () => `<div style="position:absolute;left:0;right:0;top:118px;text-align:center"><span class="chip" style="font-size:34px">The man who killed 99 · <b>Part 1</b></span></div>`,
+  (el, t) => (el.style.opacity = pr(t, 0, 0.3) * (1 - pr(t, T[9] - T[1] - 0.3, T[9] - T[1]))), 30);
+// Source chip while the Prophet ﷺ is named (fixed, outside the moving camera).
+scene(cs(1, 0), T[2], () => `<div class="src" style="position:absolute;left:0;right:0;top:200px;text-align:center"><span class="chip">Sahih Muslim <b>2766</b> · Sahih al-Bukhari <b>3470</b></span></div>`,
+  (el, t) => { const n = $(el, ".src"); n.style.opacity = pr(t, 0, 0.3) * (1 - pr(t, T[2] - cs(1, 0) - 0.3, T[2] - cs(1, 0))); n.style.translate = `0 ${f1(mix(20, 0, pr(t, 0, 0.4, E.expo)))}px`; }, 30);
+// English captions for lines 1-8.
+CAPS.slice(FIRST[1], FIRST[9]).forEach(([a, b, html]) => {
+  scene(a, b + 0.1, () => `<div class="bcap" style="bottom:360px">${AL(html)}</div>`,
+    (el, t) => { const n = $(el, ".bcap"); n.style.opacity = pr(t, 0, 0.1) * (1 - pr(t, b - a, b - a + 0.1)); n.style.scale = mix(0.92, 1, pr(t, 0, 0.18, E.back)); }, 21);
+});
+// Line 9: the question and the comment ask.
+scene(T[9], T[10], () => `<div class="abs" style="width:${W}px;height:${H}px;background:rgba(3,4,8,.45)"></div>
+  <div style="position:absolute;left:40px;right:40px;top:560px"><div class="q qq">Who <b>took</b> him?</div></div>
+  <div class="ca" style="position:absolute;left:0;right:0;top:900px;text-align:center"><span class="chip" style="font-size:46px;padding:24px 40px 22px;background:#F2E8D5;color:#0B0F1A;border:none">Comment below 👇</span></div>`,
+  (el, t) => { el.style.opacity = pr(t, 0, 0.25); $(el, ".qq").style.scale = mix(1.15, 1, pr(t, 0, 0.35, E.back)); popIn(el, ".ca", t, [cs(9, 1) - T[9]], 0.6); }, 35);
+// End card.
+scene(T[10], window.DURATION, () => `<div class="abs" style="width:${W}px;height:${H}px;background:linear-gradient(180deg,#070A14,#0F1A2C 60%,#0B0F1A)"></div>
+  <svg class="abs" width="${W}" height="${H}">${starfield(120, 91, 1900)}</svg>${glow(540, 620, 360, "rgba(232,180,90,.22)")}
+  <div style="position:absolute;left:0;right:0;top:420px;text-align:center">
+    <div class="e1" style="font:700 44px/1 Poppins;color:#C9B89A;letter-spacing:.2em">THE MAN WHO KILLED 99</div>
+    <div class="e2" style="margin-top:26px;font:900 150px/1 Poppins;color:#F2E8D5">Part <span style="color:${GOLD}">2</span></div>
+    <div class="e3" style="margin-top:18px;font:800 70px/1 Poppins;color:${GOLD}">Tomorrow</div>
+    <div class="e4" style="margin-top:80px"><span class="btn">Follow</span></div>
+    <div class="e5" style="margin-top:40px;font:700 46px/1 Poppins;color:#A9B4B6">${HANDLE}</div>
+    <div class="e6" style="margin-top:70px"><span class="chip">Sahih Muslim <b>2766</b> · Sahih al-Bukhari <b>3470</b></span></div></div>`,
+  (el, t, abs) => { el.style.opacity = pr(t, 0, 0.35); twinkle(el, abs); popIn(el, ".e1, .e2, .e3, .e4, .e5, .e6", t, [0.05, 0.15, 0.3, 0.55, 0.7, 0.9], 0.85); }, 50);
+
+// Grain + vignette on top of everything.
+(function fx() {
+  const fx = document.createElement("div");
+  fx.style.cssText = "position:absolute;inset:0;pointer-events:none;z-index:60";
+  fx.innerHTML = `<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,0,0,.5) 100%)"></div><canvas width="270" height="480" style="position:absolute;inset:0;width:1080px;height:1920px;opacity:.06;mix-blend-mode:overlay"></canvas>`;
+  stage.appendChild(fx);
+  const ctx = fx.querySelector("canvas").getContext("2d"), gi = ctx.createImageData(270, 480), inner = window.seek;
+  window.seek = (t) => {
+    inner(t);
+    let s = Math.floor(t * 30) * 9301 + 49297; const r = () => ((s = (s * 9301 + 49297) % 233280) / 233280);
+    for (let i = 0; i < gi.data.length; i += 4) { const v = r() * 255; gi.data[i] = gi.data[i + 1] = gi.data[i + 2] = v; gi.data[i + 3] = 255; }
+    ctx.putImageData(gi, 0, 0);
+  };
+})();
+</script></body></html>

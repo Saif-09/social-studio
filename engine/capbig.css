@@ -1,0 +1,9 @@
+/* Big, readable Hinglish captions (13 Nov feedback): heavy Poppins, dark stroke, yellow keywords. */
+.bcap{position:absolute;left:56px;right:56px;text-align:center;font:800 74px/1.2 Poppins;color:#fff;letter-spacing:.01em;word-spacing:.06em;-webkit-text-stroke:11px rgba(18,6,4,.92);paint-order:stroke fill;text-shadow:0 6px 24px rgba(0,0,0,.45);text-wrap:balance}
+.bcap b{color:#FFD43B}
+.hook{position:absolute;left:50px;right:50px;top:1040px;text-align:center}
+.hook .h1{font:900 96px/1.12 Poppins;color:#fff;-webkit-text-stroke:13px rgba(18,6,4,.95);paint-order:stroke fill;letter-spacing:.01em;word-spacing:.08em;text-wrap:balance}
+.hook .h1 b{color:#FFD43B}
+.hook .h2{display:inline-block;margin-bottom:30px;background:#FFD43B;color:#1D1A26;font:800 44px/1 Poppins;padding:16px 30px;border-radius:999px}
+.ask{position:absolute;left:0;right:0;text-align:center}
+.ask span{display:inline-block;background:#fff;color:#1D1A26;font:800 48px/1.2 Poppins;padding:22px 34px;border-radius:28px;box-shadow:0 14px 40px rgba(0,0,0,.35)}

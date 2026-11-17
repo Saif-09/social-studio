@@ -1,0 +1,235 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,600;0,700;0,800;1,500&family=Amiri:wght@400;700&family=Amiri+Quran&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+:root{--cream:#EEE6D1;--ink:#3B2F22;--ink2:#6B5B45;--gold:#C9A23A;--goldt:#A8781C}
+#stage{background:var(--cream)}
+.abs{position:absolute;left:0;top:0}
+.cam{position:absolute;inset:0;transform-origin:50% 45%}
+.serif{font-family:"Source Serif 4",serif}
+.badge{position:absolute;left:0;right:0;top:250px;text-align:center}
+.badge .c{display:inline-grid;place-items:center;min-width:116px;height:116px;padding:0 18px;border-radius:58px;border:4px solid var(--gold);font:700 50px/1 "Source Serif 4",serif;color:var(--ink);box-sizing:border-box}
+.badge .of{margin-top:14px;font:600 24px/1 "Source Serif 4",serif;letter-spacing:.32em;color:var(--ink2)}
+.name{position:absolute;left:40px;right:40px;top:450px;text-align:center;font:800 104px/1 "Source Serif 4",serif;color:var(--ink);letter-spacing:.01em}
+.arname{position:absolute;left:0;right:0;top:572px;text-align:center;font:400 74px/1.3 Amiri,serif;color:var(--ink);direction:rtl}
+.art{position:absolute;left:180px;top:720px;width:720px;height:600px}
+.beat{position:absolute;left:70px;right:70px;top:1350px;text-align:center;font:700 58px/1.22 "Source Serif 4",serif;color:var(--ink);text-wrap:balance}
+.beat b{color:var(--goldt)}
+.ref{position:absolute;left:0;right:0;top:1560px;text-align:center;font:600 26px/1 "Source Serif 4",serif;letter-spacing:.24em;color:#8A7A5E}
+.al{font:700 1.15em/1 Amiri,serif;color:var(--goldt)}
+.ayah{position:absolute;left:70px;right:70px;top:560px;text-align:center;font:400 74px/1.8 "Amiri Quran",Amiri,serif;color:var(--ink);direction:rtl;text-wrap:balance}
+.quote{position:absolute;left:80px;right:80px;top:1040px;text-align:center;font:italic 500 56px/1.3 "Source Serif 4",serif;color:var(--ink)}
+.quote b{color:var(--goldt);font-weight:700}
+.quote>div+div{margin-top:24px}
+.sref{position:absolute;left:0;right:0;top:1500px;text-align:center;font:600 26px/1 "Source Serif 4",serif;letter-spacing:.24em;color:#8A7A5E}
+.dot{display:inline-grid;place-items:center;width:62px;height:62px;border-radius:50%;border:3px solid var(--ink);font:700 24px/1 "Source Serif 4",serif;color:var(--ink);margin:8px;box-sizing:border-box}
+.btn{display:inline-block;background:var(--ink);color:var(--cream);font:700 50px/1 "Source Serif 4",serif;padding:28px 60px 26px;border-radius:999px}
+</style></head>
+<body><div id="stage"></div>
+<script id="sc" type="application/json">[["hook", "", [null]], ["Adam", "2:35-37", [null, "Forbidden <b>one tree</b>.", "Shaytan made him <b>slip</b>.", "Allah accepted his <b>repentance</b>."]], ["Idris", "19:56-57", [null, "A man of <b>truth</b>.", "Raised to a <b>high station</b>."]], ["Nuh", "29:14 · 11:37", [null, "<b>950 years</b> of calling.", "He built the <b>ark</b>.", "Then the <b>flood</b> came."]], ["Hud", "7:65 · 69:6", [null, "Sent to <b>'Aad</b>.", "They refused.", "A violent <b>wind</b> destroyed them."]], ["Salih", "7:73-78", [null, "A she-camel as a <b>sign</b>.", "They killed her.", "An <b>earthquake</b> seized them."]], ["Ibrahim", "21:58-69", [null, "He broke the <b>idols</b>.", "They said: <b>burn him</b>.", "Allah said: fire, be <b>cool</b>."]], ["Lut", "7:80 · 11:82", [null, "He warned against <b>indecency</b>.", "Their town turned <b>upside down</b>."]], ["Ismail", "37:102-107", [null, "His father dreamt of the <b>sacrifice</b>.", "Allah gave a great <b>ransom</b>."]], ["Ishaq & Yaqub", "11:71 · 19:49", [null, "Ibrahim's <b>son</b> and <b>grandson</b>.", "Yaqub, father of <b>Yusuf</b>."]], ["Yusuf", "12:4-100", [null, "A dream of <b>11 stars</b>.", "Jealous <b>brothers</b>.", "A <b>well</b>.", "<b>Sold</b>.", "<b>Prison</b>.", "The king: you are <b>trusted</b>.", "His parents <b>bowed</b>.", "The dream came <b>true</b>."]], ["Ayyub", "21:83-84", [null, "Hardship <b>touched</b> him.", "He called out to Allah.", "Allah <b>healed</b> him."]], ["Shuaib", "11:84 · 7:91", [null, "Sent to <b>Madyan</b>.", "Do not cheat in the <b>scales</b>.", "They did. An <b>earthquake</b> seized them."]], ["Musa", "28:7-8 · 26:63-66", [null, "His mother put him in the <b>river</b>.", "Pharaoh's family <b>picked him up</b>.", "The sea <b>split</b>.", "Pharaoh <b>drowned</b>."]], ["Harun", "20:29-31", [null, "Musa's brother, his <b>strength</b>."]], ["Dhul-Kifl", "21:85", [null, "Among the <b>patient</b>."]], ["Dawud", "2:251", [null, "He defeated <b>Jalut</b>."]], ["Sulaiman", "27:16 · 34:12", [null, "Heir of <b>Dawud</b>.", "The <b>wind</b> and the jinn served him.", "And the speech of <b>birds</b>."]], ["Ilyas", "37:123-125", [null, "He warned against worshipping <b>Baal</b>."]], ["Al-Yasa", "6:86 · 38:48", [null, "Preferred over the <b>worlds</b>."]], ["Yunus", "37:140-142 · 21:87", [null, "He left in <b>anger</b>.", "A fish <b>swallowed</b> him.", "In the darkness he called:", "There is no god <b>but You</b>."]], ["Zakariya & Yahya", "19:4-12", [null, "He prayed for a <b>son</b> in old age.", "Allah gave him <b>Yahya</b>.", "Wise as a <b>boy</b>."]], ["Isa", "3:45-49", [null, "Son of <b>Maryam</b>.", "He healed the blind and raised the <b>dead</b>, by the permission of Allah."]], ["Muhammad", "33:40", [null]], ["Ahzab", "33:40", ["The Messenger of Allah and the <b>seal</b> of the prophets."]], ["Anbiya", "21:107", ["We sent you only as a <b>mercy</b> to the worlds."]], ["Qalam", "68:4", ["You are of a <b>great character</b>."]], ["Tawbah", "9:128", ["Your suffering weighs on him.", "To the believers, <b>kind and merciful</b>."]], ["end", "", ["That is all <b>25</b>.", "Whose <b>full story</b> do you want?"]]]</script>
+<script src="lib.js"></script>
+<script src="vo/reel05p-timing.js"></script>
+<script>
+// faith brand reel 05p: every prophet named in the Quran as micro-stories (1-9 beats each), built after studying
+// the @islaminsketches reel (2:45, light editorial look, a new beat line about every 1.5 s). Our own script, Urdu
+// voice and art. No prophet is drawn: names, the ayah, and objects from each story. Each beat is its own voice
+// clip, so the picture changes exactly on the spoken word.
+const T = window.TIMES, CAPS = window.CAPS;
+window.DURATION = T[T.length - 1];
+const HANDLE = "@yourbrand";
+const SC = JSON.parse(document.getElementById("sc").textContent);
+const BEATS = SC.map((x) => x[2].length);
+const FIRST = BEATS.map((_, i) => BEATS.slice(0, i).reduce((a, b) => a + b, 0));
+const bs = (s, k) => CAPS[FIRST[s] + k][0];
+const beatAt = (s, abs) => { let k = 0; while (k + 1 < BEATS[s] && abs >= bs(s, k + 1)) k++; return k; };
+// The art shows its first picture already while the name is spoken (no empty frame on the name beat).
+const bv = (s, abs) => (BEATS[s] > 1 ? Math.max(1, beatAt(s, abs)) : beatAt(s, abs));
+const AL = (s) => s.replace(/\bAllah\b/g, `<span class="al">اللّٰه</span>`);
+const W = 1080, H = 1920, TAU = Math.PI * 2;
+const f1 = (x) => (+x).toFixed(1), S = Math.sin, C = Math.cos;
+const INK = "#3B2F22", SAGE = "#A9BE8A", TAN = "#DCC9A3", WH = "#FBF7EE", GF = "#E2B94A", BLU = "#A9BFCC", TER = "#D98C6A", DARK = "#2A2A3A";
+const SW = `stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"`;
+const glow = (x, y, r, o = 1) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#gl)" opacity="${f1(o)}"/>`;
+const star = (cx, cy, r, fill = GF) => { let p = []; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6, rr = k % 2 ? r * 0.42 : r; p.push(`${f1(cx + rr * S(a))},${f1(cy - rr * C(a))}`); } return `<polygon points="${p.join(" ")}" fill="${fill}"/>`; };
+const ease = (x) => E.out(Math.max(0, Math.min(1, x)));
+const IN = (abs, s, k, d = 0.5) => ease((abs - bs(s, k)) / d);
+const wave = (y, amp, ph, x0 = 10, x1 = 290, col = GF, w = 3) => { let d = `M${x0} ${f1(y)}`; for (let x = x0; x <= x1; x += 6) d += ` L${x} ${f1(y + amp * S(x / 14 + ph))}`; return `<path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`; };
+const ground = `<path d="M30 214 H270" ${SW} opacity=".35"/>`;
+const house = (x, w, h, base = 200) => `<rect x="${x}" y="${base - h}" width="${w}" height="${h}" fill="${TAN}" ${SW}/><rect x="${x + w / 2 - 5}" y="${base - h + 12}" width="10" height="14" fill="${INK}" opacity=".55"/>`;
+const shake = (a, s, k) => 4 * S(a * 40) * Math.max(0, 1 - (a - bs(s, k)) / 2.5);
+const quake = (o) => `<path d="M30 222 L60 210 L84 224 L114 206 L150 222 L180 208 L214 224 L262 210" fill="none" stroke="${INK}" stroke-width="3" opacity="${f1(o)}"/>`;
+
+// ---------- illustrations: D[s](abs, t, s) -> svg in a 300x250 box ----------
+const D = {
+  1: (a, t, s) => { const b = bv(s, a), fall = b >= 2 ? IN(a, s, 2, 1.0) : 0, rep = b >= 3 ? IN(a, s, 3, 0.8) : 0;
+    return `${glow(150, 90, 90, 0.7 + 0.3 * rep)}${ground}<path d="M150 210 V128 M150 156 L128 138 M150 146 L174 128" ${SW} fill="none"/>
+      <circle cx="150" cy="92" r="46" fill="${SAGE}" ${SW}/>
+      ${[[134, 80], [166, 98], [146, 110], [170, 74]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" fill="${GF}" ${SW}/>`).join("")}
+      ${b >= 2 ? `<circle cx="${f1(118 - 24 * fall)}" cy="${f1(104 + 100 * fall)}" r="7" fill="${GF}" ${SW}/>` : ""}
+      ${rep ? `${star(150, 22 + 10 * (1 - rep), 13 * rep)}${star(58, 60, 7 * rep)}${star(242, 60, 7 * rep)}` : ""}`; },
+  2: (a, t, s) => { const b = bv(s, a), up = b >= 2 ? IN(a, s, 2, 1.4) : 0;
+    return `${b >= 2 ? `<path d="M40 214 L120 120 L150 150 L190 96 L262 214 Z" fill="${TAN}" ${SW}/>` : ""}
+      ${b >= 1 ? `<g transform="translate(150 ${b >= 2 ? 196 : 140}) scale(${b >= 2 ? 0.5 : 1})">${glow(0, -10, 80)}<path d="M0 -30 C-22 -40 -48 -40 -70 -30 V30 C-48 20 -22 20 0 30 Z M0 -30 C22 -40 48 -40 70 -30 V30 C48 20 22 20 0 30 Z" fill="${WH}" ${SW}/>${[0, 1, 2].map((k) => `<path d="M-58 ${-16 + k * 14} H-12 M12 ${-16 + k * 14} H58" ${SW} opacity=".45"/>`).join("")}</g>` : ""}
+      ${up ? `${glow(150, 200 - 168 * up, 34)}${star(150, 200 - 168 * up, 14)}<path d="M150 ${f1(214)} V${f1(214 - 160 * up)}" stroke="${GF}" stroke-width="3" stroke-dasharray="4 7"/>` : ""}`; },
+  3: (a, t, s) => { const b = bv(s, a), fl = b >= 3 ? IN(a, s, 3, 1.2) : 0, by = 168 - 50 * fl + 3 * S(t * 2.4) * fl;
+    return `${b === 1 ? `${glow(150, 120, 90)}<text x="150" y="150" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="800" font-size="92" fill="${INK}">950</text><text x="150" y="184" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="600" font-size="20" letter-spacing="6" fill="${INK}" opacity=".7">YEARS</text>` : ""}
+      ${b >= 2 ? `${glow(150, by - 20, 80, 0.6)}<g transform="translate(0 ${f1(by - 168)}) rotate(${f1(fl * 3 * S(t * 2))} 150 168)"><path d="M86 160 H214 L196 188 H104 Z" fill="${WH}" ${SW}/><rect x="122" y="128" width="56" height="32" fill="${TAN}" ${SW}/><path d="M118 128 L150 108 L182 128 Z" fill="${TAN}" ${SW}/></g>` : ""}
+      ${b === 2 ? ground : ""}${fl ? `${wave(214 - 40 * fl, 6, t * 3, 10, 290, BLU, 4)}${wave(228 - 40 * fl, 6, t * 3 + 2, 10, 290, BLU, 4)}${Array.from({ length: 10 }, (_, k) => `<path d="M${20 + k * 28} ${f1((t * 160 + k * 37) % 120)} l-6 16" stroke="${BLU}" stroke-width="2.5" stroke-linecap="round"/>`).join("")}` : ""}`; },
+  4: (a, t, s) => { const b = bv(s, a), cl = b >= 2 ? IN(a, s, 2, 0.8) : 0, wd = b >= 3 ? IN(a, s, 3, 1.4) : 0;
+    const pillars = [60, 100, 140, 180, 220].map((x, k) => `<g transform="rotate(${f1(wd * (18 + k * 6))} ${x + 10} 214)"><rect x="${x}" y="${100 + (k % 2) * 16}" width="22" height="${114 - (k % 2) * 16}" fill="${TAN}" ${SW}/><rect x="${x - 4}" y="${94 + (k % 2) * 16}" width="30" height="8" fill="${TAN}" ${SW}/></g>`).join("");
+    return `${ground}${pillars}${cl ? `<path d="M70 60 C70 40 100 36 112 50 C124 30 160 32 166 52 C190 46 204 66 192 80 H78 C62 80 58 66 70 60 Z" fill="#B8B3A8" ${SW} opacity="${f1(cl)}"/>` : ""}
+      ${wd ? [0, 1, 2].map((k) => `<path d="M${30 + k * 8} ${100 + k * 34} C80 ${80 + k * 34} 170 ${80 + k * 34} 230 ${100 + k * 34} C250 ${108 + k * 34} 240 ${122 + k * 34} 222 ${116 + k * 34}" fill="none" stroke="${INK}" stroke-width="3" stroke-dasharray="40 16" stroke-dashoffset="${f1(-t * 90 - k * 20)}" opacity="${f1(wd)}"/>`).join("") : ""}`; },
+  5: (a, t, s) => { const b = bv(s, a), gone = b >= 2 ? IN(a, s, 2, 0.9) : 0, q = b >= 3 ? IN(a, s, 3, 0.4) : 0, sh = q ? shake(a, s, 3) : 0;
+    return `<g transform="translate(${f1(sh)} 0)">${glow(150, 140, 90, 1 - gone)}<path d="M20 214 L80 150 L100 170 L120 140 L150 214 Z M200 214 L240 160 L282 214 Z" fill="${TAN}" ${SW} opacity=".6"/>${ground}
+      <g opacity="${f1(1 - 0.7 * gone)}" ${gone ? `stroke-dasharray="5 6"` : ""}><path d="M110 170 L108 210 M124 172 L126 210 M170 172 L168 210 M184 170 L186 210" ${SW}/>
+      <path d="M100 168 C96 150 108 142 120 144 C128 116 160 116 166 144 C176 142 184 146 188 152 L192 134 C194 122 202 114 214 118 L222 122 L218 130 L206 130 L202 158 C200 170 184 176 170 176 L116 176 C106 176 102 174 100 168 Z" fill="${gone ? "none" : WH}" ${SW}/></g>${q ? quake(q) : ""}</g>`; },
+  6: (a, t, s) => { const b = bv(s, a), fire = b >= 2 ? IN(a, s, 2, 0.6) : 0, cool = b >= 3 ? IN(a, s, 3, 1.2) : 0;
+    const blocks = `<g opacity="${f1(1 - 0.6 * fire)}"><rect x="40" y="150" width="40" height="60" fill="${TAN}" ${SW}/><rect x="96" y="176" width="54" height="34" fill="${TAN}" ${SW} transform="rotate(-12 123 193)"/><rect x="236" y="160" width="34" height="50" fill="${TAN}" ${SW}/><path d="M48 166 L72 186 M244 172 L262 196" ${SW}/><path d="M190 120 L214 196 M180 130 L204 116" ${SW}/></g>`;
+    const c1 = cool ? `rgb(${Math.round(217 - 60 * cool)},${Math.round(140 + 60 * cool)},${Math.round(106 + 110 * cool)})` : TER;
+    return `${ground}${b >= 1 ? blocks : ""}${fire ? `${glow(150, 140, 90, fire)}<g transform="translate(150 212) scale(${f1(fire * (1 + 0.04 * S(t * 12)))}) translate(-150 -212)"><path d="M150 212 C110 200 108 156 132 120 C134 140 144 146 150 142 C142 118 156 92 176 76 C172 110 196 130 192 164 C190 196 172 212 150 212 Z" fill="${c1}" ${SW}/><path d="M150 210 C134 204 132 184 144 166 C146 178 152 180 156 176 C160 190 164 202 150 210 Z" fill="${cool ? WH : GF}" ${SW}/></g>` : ""}
+      ${cool ? [70, 100, 200, 230].map((x) => `<path d="M${x} 212 V${f1(212 - 26 * cool)} M${x} ${f1(212 - 14 * cool)} C${x - 10} ${f1(212 - 20 * cool)} ${x - 12} ${f1(212 - 28 * cool)} ${x - 8} ${f1(212 - 32 * cool)}" fill="none" stroke="#6E8F55" stroke-width="3" stroke-linecap="round"/>`).join("") : ""}`; },
+  7: (a, t, s) => { const b = bv(s, a), fl = b >= 2 ? IN(a, s, 2, 1.0) : 0;
+    return `${ground}<g transform="rotate(${f1(180 * fl)} 150 156)">${house(60, 36, 60)}${house(100, 44, 84)}${house(148, 38, 66)}${house(190, 46, 90)}<path d="M50 200 H246" ${SW}/></g>
+      ${b === 1 ? `<circle cx="150" cy="150" r="${f1(74 + 6 * S(t * 3))}" fill="none" stroke="${TER}" stroke-width="3" stroke-dasharray="6 8" opacity=".7"/>` : ""}
+      ${fl ? Array.from({ length: 8 }, (_, k) => `<circle cx="${30 + k * 34}" cy="${f1(((t * 150 + k * 29) % 220) - 10)}" r="5" fill="#9A8A70" ${SW}/>`).join("") : ""}`; },
+  8: (a, t, s) => { const b = bv(s, a), ram = b >= 2 ? IN(a, s, 2, 0.8) : 0;
+    return `<path d="M88 36 A26 26 0 1 0 114 74 A20 20 0 1 1 88 36 Z" fill="${GF}" ${SW} opacity="${f1(1 - 0.5 * ram)}"/>
+      ${b >= 1 ? `<g opacity="${f1(1 - 0.7 * ram)}"><path d="M150 40 C150 22 178 16 190 30 C206 18 236 26 234 46 C252 52 248 76 228 76 H164 C146 76 140 56 150 40 Z" fill="${WH}" ${SW}/>${star(192, 52, 9)}<circle cx="146" cy="88" r="5" fill="${WH}" ${SW}/><circle cx="136" cy="100" r="3" fill="${WH}" ${SW}/></g>` : ""}
+      ${ground}${ram ? `<g transform="translate(0 ${f1(20 * (1 - ram))})" opacity="${f1(ram)}">${glow(150, 160, 70)}<path d="M112 176 L112 208 M128 178 L128 208 M172 178 L172 208 M188 176 L188 208" ${SW}/>
+      <path d="M100 172 C94 150 116 136 138 144 C156 132 184 136 194 152 C202 168 196 182 178 184 L118 186 C106 186 102 180 100 172 Z" fill="${WH}" ${SW}/><path d="M192 150 C198 136 214 132 220 144 C224 154 218 166 206 166 L196 162 Z" fill="${WH}" ${SW}/><path d="M200 144 C188 126 168 134 174 148 C178 158 192 156 192 148" fill="none" ${SW}/></g>` : ""}`; },
+  9: (a, t, s) => { const b = bv(s, a), n = [["Ibrahim", 40, 1], ["Ishaq", 96, b >= 1 ? 1 : 0.5], ["Yaqub", 152, b >= 1 ? 1 : 0.5], ["Yusuf", 208, b >= 2 ? IN(a, s, 2) : 0]];
+    return n.map(([nm, y, o], k) => o ? `<g opacity="${f1(o)}">${k ? `<path d="M110 ${y - 42} V${y - 14}" ${SW}/>` : ""}<circle cx="110" cy="${y}" r="13" fill="${(k === 3) || (k >= 1 && k <= 2 && b === 1) ? GF : WH}" ${SW}/><text x="138" y="${y + 8}" font-family="'Source Serif 4', serif" font-weight="700" font-size="24" fill="${INK}">${nm}</text></g>` : "").join(""); },
+  10: (a, t, s) => { const b = bv(s, a), bow = b >= 7 ? IN(a, s, 7, 0.8) : 0, tru = b >= 8 ? IN(a, s, 8, 0.8) : 0;
+    const icon = (k, html) => b >= k ? `<g transform="translate(${40 + (k - 2) * 56} 200) scale(${f1(1.3 * IN(a, s, k, 0.35))})">${html}</g>` : "";
+    return `${glow(150, 70, 80, 0.6 + 0.4 * tru)}${b >= 1 ? `${Array.from({ length: 11 }, (_, k) => { const ang = Math.PI * (0.15 + 0.7 * k / 10), x = 150 - 70 * C(ang), y = 94 - 40 * S(ang) + 8 * bow; return star(x, y, 8); }).join("")}
+      <path d="M44 ${f1(40 + 12 * bow)} A16 16 0 1 0 60 ${f1(68 + 12 * bow)} A12 12 0 1 1 44 ${f1(40 + 12 * bow)} Z" fill="${GF}" ${SW}/><circle cx="252" cy="${f1(54 + 12 * bow)}" r="15" fill="${GF}" ${SW}/>` : ""}
+      ${icon(2, Array.from({ length: 10 }, (_, k) => `<circle cx="${-14 + (k % 5) * 7}" cy="${-8 + Math.floor(k / 5) * 9}" r="3.4" fill="${INK}" opacity=".7"/>`).join("") + `<circle cx="26" cy="-4" r="5" fill="${GF}" ${SW}/>`)}
+      ${icon(3, `<ellipse cx="0" cy="0" rx="18" ry="7" fill="${INK}" opacity=".8"/><path d="M-18 0 V10 Q0 18 18 10 V0" fill="${TAN}" ${SW}/><path d="M0 -24 V-2" ${SW}/>`)}
+      ${icon(4, [-10, 0, 10].map((x, k) => `<circle cx="${x}" cy="${-k * 4}" r="8" fill="${GF}" ${SW}/>`).join(""))}
+      ${icon(5, `<rect x="-16" y="-18" width="32" height="32" fill="${TAN}" ${SW}/><path d="M-8 -18 V14 M0 -18 V14 M8 -18 V14" ${SW}/>`)}
+      ${icon(6, `<path d="M-18 10 V-8 L-9 2 L0 -14 L9 2 L18 -8 V10 Z" fill="${GF}" ${SW}/>`)}`; },
+  11: (a, t, s) => { const b = bv(s, a), call = b >= 2 ? IN(a, s, 2, 0.4) : 0, heal = b >= 3 ? IN(a, s, 3, 1.0) : 0, droop = 1 - heal;
+    const leaf = (dir) => `<path d="M150 ${f1(160 - 10 * heal)} Q${f1(150 + dir * 30)} ${f1(150 + 30 * droop - 20 * heal)} ${f1(150 + dir * 44)} ${f1(170 + 34 * droop - 40 * heal)} Q${f1(150 + dir * 14)} ${f1(176 + 20 * droop - 26 * heal)} 150 ${f1(160 - 10 * heal)} Z" fill="${heal > 0.5 ? SAGE : TAN}" ${SW}/>`;
+    return `${ground}${glow(150, 160, 80, heal)}<path d="M150 212 V${f1(160 - 10 * heal)}" ${SW} fill="none"/>${leaf(-1)}${leaf(1)}
+      ${heal < 1 ? `<g opacity="${f1(droop)}"><path d="M90 40 C90 24 116 20 124 32 C136 16 168 20 168 40 C184 42 186 62 170 64 H96 C80 64 78 46 90 40 Z" fill="#C8C2B6" ${SW}/>${Array.from({ length: 6 }, (_, k) => `<path d="M${100 + k * 13} ${f1(72 + ((t * 70 + k * 17) % 50))} l-3 9" stroke="${BLU}" stroke-width="2.5" stroke-linecap="round"/>`).join("")}</g>` : ""}
+      ${call ? [0, 1, 2].map((k) => { const r = (t * 30 + k * 22) % 66; return `<circle cx="150" cy="140" r="${f1(r)}" fill="none" stroke="${GF}" stroke-width="3" opacity="${f1(call * (1 - r / 66) * droop)}"/>`; }).join("") : ""}
+      ${heal ? Array.from({ length: 7 }, (_, k) => { const ph = (t * 0.9 + k / 7) % 1; return `<circle cx="${f1(230 + (k % 2 ? 1 : -1) * ph * 16)}" cy="${f1(208 - 90 * ph * (1 - ph) * 3)}" r="3.5" fill="${BLU}" opacity="${f1(heal * (1 - ph * 0.5))}"/>`; }).join("") : ""}`; },
+  12: (a, t, s) => { const b = bv(s, a), sc = b >= 2 ? IN(a, s, 2, 0.4) : 0, q = b >= 3 ? IN(a, s, 3, 0.4) : 0, sh = q ? shake(a, s, 3) : 0, ang = sc ? 14 * S(t * 2.5) : 0;
+    return `<g transform="translate(${f1(sh)} 0)">${ground}${[[40, 70], [190, 70]].map(([x, w]) => `<path d="M${x} 212 V160 L${x + w / 2} 136 L${x + w} 160 V212 Z" fill="${TAN}" ${SW}/><path d="M${x - 6} 160 L${x + w / 2} 128 L${x + w + 6} 160" fill="none" stroke="${TER}" stroke-width="5" stroke-linecap="round"/>`).join("")}
+      ${sc ? `<g opacity="${f1(sc)}">${glow(150, 90, 60)}<path d="M150 196 V64 M132 196 H168" ${SW}/><g transform="rotate(${f1(ang)} 150 64)"><path d="M100 64 H200" ${SW}/><path d="M106 64 L94 110 M106 64 L118 110 M194 64 L182 110 M194 64 L206 110" ${SW} opacity=".7"/><path d="M88 110 Q106 124 124 110 Z M176 110 Q194 124 212 110 Z" fill="${GF}" ${SW}/></g></g>` : ""}${q ? quake(q) : ""}</g>`; },
+  13: (a, t, s) => { const b = bv(s, a), pick = b >= 2 ? IN(a, s, 2, 1.0) : 0, part = b >= 3 ? IN(a, s, 3, 0.8) : 0, drown = b >= 4 ? IN(a, s, 4, 0.8) : 0;
+    if (b <= 2) { const bx = 80 + 110 * pick, byy = 176 - 34 * pick;
+      return `${b >= 2 ? `<g opacity="${f1(pick)}"><rect x="200" y="96" width="80" height="104" fill="${TAN}" ${SW}/>${[0, 1, 2].map((k) => `<rect x="${210 + k * 24}" y="110" width="12" height="90" fill="${WH}" ${SW}/>`).join("")}<path d="M194 96 H286 L276 82 H204 Z" fill="${TAN}" ${SW}/></g>` : ""}
+        ${wave(186, 5, t * 3, 10, 290, BLU, 4)}${wave(200, 5, t * 3 + 2, 10, 290, BLU, 4)}${glow(bx, byy - 6, 40)}<g transform="translate(${f1(bx)} ${f1(byy + 2 * S(t * 2.5))})"><path d="M-30 0 H30 L22 14 H-22 Z" fill="${TAN}" ${SW}/><path d="M-26 0 Q0 -16 26 0 Z" fill="${WH}" ${SW}/></g>`; }
+    const o = part * 50 * (1 - drown); const wall = (x0, x1) => `<path d="M${f1(x0)} 214 V70 ${Array.from({ length: 7 }, (_, k) => `L${f1(x0 + (x1 - x0) * k / 6)} ${f1(64 + 5 * S(k * 1.4 + t * 3))}`).join(" ")} L${f1(x1)} 214 Z" fill="${BLU}" ${SW}/>`;
+    return `${wall(20, 150 - o)}${wall(150 + o, 280)}${o > 4 ? `<path d="M${f1(150 - o * 0.7)} 211 H${f1(150 + o * 0.7)}" stroke="${TAN}" stroke-width="7"/>` : ""}`; },
+  14: (a, t, s) => { const b = bv(s, a), on2 = b >= 1 ? IN(a, s, 1, 0.8) : 0; const L = (x, on) => `${on ? glow(x, 120, 50, on) : ""}<path d="M${x} 40 V66" ${SW}/><path d="M${x - 14} 66 H${x + 14} L${x + 24} 92 L${x + 18} 170 H${x - 18} L${x - 24} 92 Z" fill="${TAN}" ${SW}/><path d="M${x - 12} 94 H${x + 12} L${x + 9} 160 H${x - 9} Z" fill="${on ? GF : WH}" opacity="${f1(0.4 + 0.6 * on)}"/><path d="M${x - 16} 170 H${x + 16} L${x + 8} 186 H${x - 8} Z" fill="${TAN}" ${SW}/>`;
+    return `${L(110, 1)}${L(190, on2)}${ground}`; },
+  15: (a, t, s) => { const p = Math.min(1, (a - bs(s, 0)) / 3);
+    return `${glow(150, 130, 70)}<path d="M100 30 H200 M100 220 H200" ${SW}/><path d="M110 30 C110 96 146 108 146 124 C146 140 110 152 110 220 M190 30 C190 96 154 108 154 124 C154 140 190 152 190 220" fill="none" ${SW}/>
+      <path d="M${f1(122 + 22 * p)} ${f1(56 + 40 * p)} L${f1(178 - 22 * p)} ${f1(56 + 40 * p)} L150 118 Z" fill="${GF}" ${SW}/><path d="M${f1(150 - 32 * p)} 214 Q150 ${f1(214 - 50 * p)} ${f1(150 + 32 * p)} 214 Z" fill="${GF}" ${SW}/><path d="M150 120 V212" stroke="${GF}" stroke-width="3" stroke-dasharray="4 6" stroke-dashoffset="${f1(-t * 30)}"/>`; },
+  16: (a, t, s) => { const b = bv(s, a), k = b >= 1 ? IN(a, s, 1, 0.9) : 0, x = 60 + 150 * k, y = 168 - 110 * k + 64 * k * k, hit = b >= 1 ? Math.min(1, Math.max(0, (a - bs(s, 1) - 0.9) / 0.6)) : 0;
+    return `${ground}<g transform="rotate(${f1(70 * hit)} 226 212)"><path d="M206 212 V110 C206 92 246 92 246 110 V212 Z" fill="${TAN}" ${SW}/><circle cx="226" cy="130" r="10" fill="${INK}" opacity=".5"/></g>
+      <path d="M46 212 Q36 186 48 168 M46 212 Q68 194 62 168" fill="none" ${SW}/><path d="M44 164 Q55 176 66 164 Q55 158 44 164 Z" fill="${TAN}" ${SW}/>
+      ${k > 0 && hit <= 0 ? `<circle cx="${f1(x)}" cy="${f1(y)}" r="9" fill="${WH}" ${SW}/>` : ""}${hit > 0 ? `${glow(150, 90, 70, hit)}${star(150, 86, 16 * hit)}` : ""}`; },
+  17: (a, t, s) => { const b = bv(s, a), wind = b >= 2 ? IN(a, s, 2, 0.6) : 0, birds = b >= 3 ? IN(a, s, 3, 0.5) : 0;
+    return `${glow(150, 168, 60)}<g transform="translate(150 172) scale(${b >= 2 ? 0.8 : 1.3})"><path d="M-40 20 V-12 L-20 6 L0 -26 L20 6 L40 -12 V20 Z" fill="${GF}" ${SW}/><circle cx="0" cy="-26" r="5" fill="${GF}" ${SW}/></g>
+      ${wind ? [0, 1, 2].map((k) => `<path d="M${30 + k * 10} ${50 + k * 26} C80 ${30 + k * 26} 200 ${30 + k * 26} 250 ${50 + k * 26}" fill="none" stroke="${INK}" stroke-width="3" stroke-dasharray="36 14" stroke-dashoffset="${f1(-t * 80 - k * 20)}" opacity="${f1(wind * 0.8)}"/>`).join("") + [62, 238].map((x, k) => `<path d="M${x} ${f1(152 - 4 * S(t * 6 + k))} C${x - 12} 138 ${x - 2} 124 ${x + 4} 112 C${x + 6} 128 ${x + 16} 138 ${x} ${f1(152 - 4 * S(t * 6 + k))} Z" fill="${TER}" opacity="${f1(wind * 0.75)}"/>`).join("") : ""}
+      ${birds ? Array.from({ length: 5 }, (_, k) => { const x = ((t * 40 + k * 66) % 330) - 20, y = 30 + (k % 3) * 22, f = 8 * S(t * 9 + k); return `<path d="M${f1(x - 16)} ${f1(y - f)} Q${f1(x - 8)} ${f1(y - 9)} ${f1(x)} ${f1(y)} Q${f1(x + 8)} ${f1(y - 9)} ${f1(x + 16)} ${f1(y - f)}" fill="none" ${SW} opacity="${f1(birds)}"/>`; }).join("") : ""}`; },
+  18: (a, t, s) => { const b = bv(s, a), fall = b >= 1 ? IN(a, s, 1, 1.4) : 0;
+    return `${ground}<g transform="rotate(${f1(28 * fall)} 172 212)"><rect x="132" y="70" width="40" height="142" fill="#B8B3A8" ${SW}/><path d="M124 70 H180 L172 52 H132 Z" fill="#B8B3A8" ${SW}/>${fall > 0.2 ? `<path d="M140 100 L156 128 L146 150 L162 178" fill="none" ${SW}/>` : ""}</g>
+      ${fall ? `${glow(70, 70, 50, fall)}${star(70, 70, 14 * fall)}` : ""}`; },
+  19: (a, t, s) => `${Array.from({ length: 16 }, (_, k) => { const r = (n) => Math.abs((S(k * 12.9898 + n * 78.233) * 43758.5453) % 1); return `<circle cx="${f1(30 + r(1) * 240)}" cy="${f1(20 + r(2) * 190)}" r="${f1(1.5 + r(3) * 2.5)}" fill="${INK}" opacity="${f1(0.25 + 0.2 * S(t * 2 + k))}"/>`; }).join("")}${glow(150, 120, 80, 0.8 + 0.2 * S(t * 3))}${star(150, 120, 34 + 3 * S(t * 3))}`,
+  20: (a, t, s) => { const b = bv(s, a), sw = b >= 2 ? IN(a, s, 2, 0.6) : 0, dark = b >= 3 ? IN(a, s, 3, 0.8) : 0, lite = b >= 4 ? IN(a, s, 4, 0.8) : 0, sx = 90 + 40 * Math.min(1, (a - bs(s, 0)) / 3);
+    return `<rect x="0" y="0" width="300" height="250" rx="24" fill="${DARK}" opacity="${f1(dark * 0.92)}"/>${b < 2 ? `<g transform="translate(${f1(sx)} ${f1(156 + 3 * S(t * 2.4))})"><path d="M-40 0 H40 L30 18 H-30 Z" fill="${WH}" ${SW}/><path d="M0 0 V-46 L30 -12 Z" fill="${TAN}" ${SW}/></g>` : ""}
+      ${sw ? `<g transform="translate(${f1(70 + 20 * sw)} ${f1(150 - 10 * sw)})"><path d="M-40 10 C-30 -30 60 -40 96 -6 L120 -24 L116 8 L124 38 L96 22 C60 54 -28 50 -40 10 Z" fill="${BLU}" ${SW}/><circle cx="-14" cy="0" r="4" fill="${INK}"/></g>` : ""}
+      ${wave(196, 5, t * 3, 10, 290, dark ? "#6A7A8A" : BLU, 4)}${lite ? `${glow(120, 140, 46, lite)}<circle cx="120" cy="140" r="${f1(6 * lite)}" fill="#FFE7A8"/>` : ""}`; },
+  21: (a, t, s) => { const b = bv(s, a), gift = b >= 2 ? IN(a, s, 2, 0.8) : 0, book = b >= 3 ? IN(a, s, 3, 0.6) : 0, sw = S(t * 1.6) * 6;
+    return `<path d="M60 214 V110 A90 90 0 0 1 240 110 V214" fill="${WH}" ${SW}/><path d="M84 214 V116 A66 66 0 0 1 216 116 V214" fill="none" ${SW} opacity=".45"/>
+      <g transform="rotate(${f1(sw)} 150 40)"><path d="M150 40 V90" ${SW}/>${glow(150, 104, 40, 0.8)}<path d="M138 90 H162 L168 102 L158 120 H142 L132 102 Z" fill="${GF}" ${SW}/></g>
+      ${gift ? `${glow(150, 166, 40, gift)}${star(150, 166, 14 * gift)}` : ""}${book ? `<g transform="translate(150 198) scale(${f1(0.7 * book)})"><path d="M0 -14 C-16 -20 -36 -20 -52 -14 V22 C-36 16 -16 16 0 22 Z M0 -14 C16 -20 36 -20 52 -14 V22 C36 16 16 16 0 22 Z" fill="${WH}" ${SW}/></g>` : ""}`; },
+  22: (a, t, s) => { const b = bv(s, a), eye = b >= 2 ? IN(a, s, 2, 1.0) : 0, mv = b >= 2 ? IN(a, s, 2, 0.6) * -50 : 0;
+    return `${ground}<g transform="translate(${f1(mv)} 0)"><path d="M150 212 C146 170 150 120 160 84" fill="none" stroke="${INK}" stroke-width="7" stroke-linecap="round"/>
+      ${[-60, -20, 20, 60, 100].map((ang) => { const r = (ang - 90) * Math.PI / 180; return `<path d="M160 84 Q${f1(160 + 50 * C(r))} ${f1(74 + 50 * S(r))} ${f1(160 + 80 * C(r))} ${f1(94 + 80 * S(r))}" fill="none" stroke="#6E8F55" stroke-width="7" stroke-linecap="round"/>`; }).join("")}
+      ${[[154, 100], [168, 104], [160, 112]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5" fill="${TER}" ${SW}/>`).join("")}</g>
+      ${eye ? `<g transform="translate(224 140)">${glow(0, 0, 50, eye)}<path d="M-36 0 Q0 ${f1(-30 * eye)} 36 0 Q0 ${f1(30 * eye)} -36 0 Z" fill="${WH}" ${SW}/><circle cx="0" cy="0" r="${f1(11 * eye)}" fill="${INK}"/><circle cx="3" cy="-3" r="${f1(3 * eye)}" fill="${WH}"/></g>` : ""}`; },
+  23: (a, t, s) => `<g transform="rotate(${f1(t * 6)} 150 125)">${Array.from({ length: 24 }, (_, k) => `<path d="M${f1(150 + 60 * C(k * TAU / 24))} ${f1(125 + 60 * S(k * TAU / 24))} L${f1(150 + (k % 2 ? 96 : 108) * C(k * TAU / 24))} ${f1(125 + (k % 2 ? 96 : 108) * S(k * TAU / 24))}" stroke="${GF}" stroke-width="3" stroke-linecap="round"/>`).join("")}</g>
+    ${glow(150, 125, 70)}${[50, 38, 26].map((r) => `<circle cx="150" cy="125" r="${r}" fill="none" stroke="${GF}" stroke-width="3"/>`).join("")}${star(150, 125, 18)}`,
+};
+
+// ---------- backdrop: cream, grid paper, warm vignette; the shared glow gradient lives here (always visible) ----------
+scene(0, window.DURATION, () => `<div class="abs" style="width:${W}px;height:${H}px;background:linear-gradient(rgba(120,100,60,.07) 2px,transparent 2px) 0 0/48px 48px,linear-gradient(90deg,rgba(120,100,60,.07) 2px,transparent 2px) 0 0/48px 48px,#EEE6D1"></div>
+  <div class="abs" style="width:${W}px;height:${H}px;background:radial-gradient(ellipse at 50% 40%,rgba(255,250,235,.5),rgba(0,0,0,0) 55%,rgba(120,100,60,.12) 100%)"></div>
+  <svg width="0" height="0" style="position:absolute"><defs><radialGradient id="gl"><stop offset="0" stop-color="#F6D37A" stop-opacity=".75"/><stop offset="1" stop-color="#F6D37A" stop-opacity="0"/></radialGradient></defs></svg>`, () => {}, 0);
+
+// ---------- scenes ----------
+const NUM = ["", "1", "2", "3", "4", "5", "6", "7", "8", "9 · 10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22 · 23", "24", "25"];
+const AR = ["", "آدَم", "إِدْرِيس", "نُوح", "هُود", "صَالِح", "إِبْرَاهِيم", "لُوط", "إِسْمَاعِيل", "إِسْحَاق وَيَعْقُوب", "يُوسُف", "أَيُّوب", "شُعَيْب", "مُوسَىٰ", "هَارُون", "ذُو ٱلْكِفْل", "دَاوُود", "سُلَيْمَان", "إِلْيَاس", "ٱلْيَسَع", "يُونُس", "زَكَرِيَّا وَيَحْيَىٰ", "عِيسَىٰ", "مُحَمَّد"];
+const TR = 0.3;
+function shot(i, a, b, html, upd) {
+  scene(a, b + TR, () => `<div class="cam">${html}</div>`, (el, t, abs) => {
+    const d = b + TR - a, inn = i === 0 ? 1 : pr(t, 0, TR, E.out), out = pr(t, d - TR, d, E.in);
+    el.style.opacity = inn * (1 - out); $(el, ".cam").style.transform = `scale(${(mix(1.04, 1, inn) * mix(1, 0.98, out)).toFixed(4)})`;
+    upd(el, t, abs);
+  }, 2 + i);
+}
+// Hook: the promise, and 25 circles filling in.
+shot(0, T[0], T[1], `<div style="position:absolute;left:60px;right:60px;top:470px;text-align:center;color:${INK}">
+    <div style="font:600 46px/1.2 'Source Serif 4',serif;letter-spacing:.06em">IN TWO MINUTES</div>
+    <div style="margin-top:22px;font:800 112px/1.02 'Source Serif 4',serif">EVERY PROPHET</div>
+    <div style="margin-top:16px;font:600 54px/1.2 'Source Serif 4',serif">named in the <span style="color:#A8781C">Quran</span></div></div>
+  <div style="position:absolute;left:110px;right:110px;top:900px;text-align:center">${Array.from({ length: 25 }, (_, k) => `<span class="dot">${k + 1}</span>`).join("")}</div>`,
+  (el, t) => $$(el, ".dot").forEach((d, k) => { const a0 = 0.05 + k * 0.07, on = t >= a0; d.style.background = on ? GF : "transparent"; d.style.scale = on ? mix(1.25, 1, pr(t, a0, a0 + 0.2, E.back)) : 1; }));
+// Prophets (scenes 1-22) and the Prophet ﷺ intro (scene 23).
+for (let s = 1; s <= 23; s++) {
+  const [key, ref, lines] = SC[s], last = s === 23;
+  shot(s, T[s], T[s + 1], `
+    <div class="badge"><span class="c">${NUM[s]}</span><div class="of">${last ? "OF 25 · THE LAST" : "OF 25"}</div></div>
+    <div class="name" style="${key.length > 12 ? "font-size:84px;top:462px" : ""}">${last ? `<span style="font:600 40px/1 'Source Serif 4',serif;letter-spacing:.24em;display:block;margin-bottom:16px">OUR BELOVED</span>MUHAMMAD` : key.toUpperCase().replace("&", "<span style='color:#A8781C'>&amp;</span>")}</div>
+    <div class="arname" style="${key.length > 12 ? "font-size:62px;top:566px" : ""}${last ? "top:628px" : ""}">${AR[s]}${last ? ` <span style="font-size:.55em">ﷺ</span>` : ""}</div>
+    <svg class="art" viewBox="0 0 300 250" style="${last ? "top:770px" : ""}"><g class="ill"></g></svg>
+    <div class="beat"></div>
+    <div class="ref">${last ? "" : `QURAN ${ref}`}</div>`,
+    (el, t, abs) => {
+      $(el, ".ill").innerHTML = D[s](abs, t, s);
+      const k = beatAt(s, abs), txt = lines[k], bt = $(el, ".beat");
+      if (bt.dataset.k !== String(k)) { bt.innerHTML = txt && txt !== key ? AL(txt) : ""; bt.dataset.k = k; bt.style.fontSize = (txt || "").replace(/<[^>]+>/g, "").length > 55 ? "48px" : "58px"; }
+      const p = pr(abs, bs(s, k), bs(s, k) + 0.25, E.out); bt.style.opacity = p; bt.style.translate = `0 ${f1(mix(18, 0, p))}px`;
+      $(el, ".name").style.opacity = pr(t, 0, 0.25); $(el, ".arname").style.opacity = pr(t, 0.1, 0.35);
+    });
+}
+// The four ayahs about the Prophet ﷺ (scenes 24-27).
+const AYAH = {
+  24: ["Al-Ahzab", "33:40", "وَلَـٰكِن رَّسُولَ ٱللَّهِ وَخَاتَمَ ٱلنَّبِيِّـۧنَ"],
+  25: ["Al-Anbiya", "21:107", "وَمَآ أَرْسَلْنَـٰكَ إِلَّا رَحْمَةً لِّلْعَـٰلَمِينَ"],
+  26: ["Al-Qalam", "68:4", "وَإِنَّكَ لَعَلَىٰ خُلُقٍ عَظِيمٍ"],
+  27: ["At-Tawbah", "9:128", "عَزِيزٌ عَلَيْهِ مَا عَنِتُّمْ حَرِيصٌ عَلَيْكُم بِٱلْمُؤْمِنِينَ رَءُوفٌ رَّحِيمٌ"],
+};
+for (let s = 24; s <= 27; s++) {
+  const [sur, ref, ar] = AYAH[s], lines = SC[s][2];
+  shot(s, T[s], T[s + 1], `<div style="position:absolute;left:0;right:0;top:380px;text-align:center;font:600 28px/1 'Source Serif 4',serif;letter-spacing:.24em;color:#8A7A5E">MUHAMMAD ﷺ</div>
+    <svg class="abs" width="${W}" height="${H}"><circle cx="540" cy="720" r="380" fill="url(#gl)" opacity=".8"/></svg>
+    <div class="ayah">${ar}</div><div class="quote"></div><div class="sref">SURAH ${sur.toUpperCase()} · ${ref}</div>`,
+    (el, t, abs) => {
+      const ay = $(el, ".ayah"); ay.style.opacity = pr(t, 0.05, 0.45); ay.style.translate = `0 ${f1(mix(20, 0, pr(t, 0.05, 0.6, E.out)))}px`;
+      const k = beatAt(s, abs), q = $(el, ".quote");
+      if (q.dataset.k !== String(k)) { q.innerHTML = lines.slice(0, k + 1).map((l) => `<div>“${AL(l)}”</div>`).join(""); q.dataset.k = k; }
+      $$(el, ".quote > div").forEach((d, j) => { const p = pr(abs, bs(s, j), bs(s, j) + 0.3, E.out); d.style.opacity = p; d.style.translate = `0 ${f1(mix(14, 0, p))}px`; });
+      $(el, ".sref").style.opacity = pr(t, 0.4, 0.8);
+    });
+}
+// End: that is all 25, comment his name; then follow.
+shot(28, T[28], T[29], `<div style="position:absolute;left:60px;right:60px;top:430px;text-align:center;color:${INK}">
+    <div class="e1" style="font:800 96px/1.05 'Source Serif 4',serif">THAT IS ALL <span style="color:#A8781C">25</span></div>
+    <div class="e2" style="margin-top:60px;font:700 60px/1.2 'Source Serif 4',serif">Whose full story<br>do you want?</div>
+    <div class="e3" style="margin-top:40px;font:800 50px/1 'Source Serif 4',serif;letter-spacing:.06em;color:#A8781C">COMMENT HIS NAME 👇</div></div>
+  <div style="position:absolute;left:110px;right:110px;top:1080px;text-align:center">${Array.from({ length: 25 }, (_, k) => `<span class="dot" style="background:${GF}">${k + 1}</span>`).join("")}</div>`,
+  (el, t) => popIn(el, ".e1, .e2, .e3", t, [0.05, bs(28, 1) - T[28], bs(28, 1) - T[28] + 0.4], 0.85));
+scene(T[29], window.DURATION, () => `<div style="position:absolute;left:60px;right:60px;top:640px;text-align:center;color:${INK}">
+    <div class="f1" style="font:800 84px/1.1 'Source Serif 4',serif">Full stories,<br><span style="color:#A8781C">one by one</span></div>
+    <div class="f2" style="margin-top:70px"><span class="btn">Follow</span></div>
+    <div class="f3" style="margin-top:40px;font:700 44px/1 'Source Serif 4',serif;color:#6B5B45">${HANDLE}</div></div>`,
+  (el, t) => { el.style.opacity = pr(t, 0, 0.3); popIn(el, ".f1, .f2, .f3", t, [0.05, 0.3, 0.45], 0.85); }, 50);
+</script>
+</body></html>

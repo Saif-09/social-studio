@@ -1,0 +1,168 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,600;0,700;0,800;1,500&family=Amiri:wght@400;700&family=Amiri+Quran&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<style>
+:root{--cream:#EEE6D1;--ink:#3B2F22;--ink2:#6B5B45;--goldt:#A8781C}
+#stage{background:var(--cream)}
+.abs{position:absolute;left:0;top:0}
+.cam{position:absolute;inset:0;transform-origin:50% 45%}
+.lbl{position:absolute;left:0;right:0;top:300px;text-align:center;font:600 28px/1 "Source Serif 4",serif;letter-spacing:.32em;color:#8A7A5E}
+.ttl{position:absolute;left:60px;right:60px;top:352px;text-align:center;font:800 76px/1.08 "Source Serif 4",serif;color:var(--ink);text-wrap:balance}
+.ttl b{color:var(--goldt)}
+.arn{position:absolute;left:0;right:0;top:0;text-align:center;font:400 62px/1.3 Amiri,serif;color:var(--ink2);direction:rtl}
+.art{position:absolute;left:126px;top:580px;width:828px;height:690px;overflow:visible}
+.beat{position:absolute;left:80px;right:80px;top:1290px;text-align:center;font:700 46px/1.25 "Source Serif 4",serif;letter-spacing:.02em;color:var(--ink);text-wrap:balance}
+.beat b{color:var(--goldt)}
+.ref{position:absolute;left:0;right:0;top:1480px;text-align:center;font:600 24px/1 "Source Serif 4",serif;letter-spacing:.24em;color:#8A7A5E}
+.dk .lbl,.dk .ref{color:#B7B2A3}.dk .ttl,.dk .beat{color:#F2E8D5}.dk .arn{color:#C9C0A8}.dk .ttl b,.dk .beat b{color:#E8B45A}
+.al{font-family:Amiri,serif;font-weight:700;font-size:1.1em;unicode-bidi:isolate}
+.btn{display:inline-block;background:var(--ink);color:var(--cream);font:700 50px/1 "Source Serif 4",serif;padding:28px 60px 26px;border-radius:999px}
+</style></head>
+<body><div id="stage"></div>
+<script id="sc" type="application/json">[["hook", "", ["THE LAST SOUND: THEIR *FOOTSTEPS*, WALKING AWAY", "EVERY PHASE AFTER DEATH. *2 MINUTES*."]], ["soul", "", ["PHASE 1: THE *SOUL* IS TAKEN", "THE ANGEL OF DEATH *WILL TAKE YOU*"]], ["grave", "", ["PHASE 2: *THE GRAVE*", "WASHED. WRAPPED. PRAYED OVER. *BURIED*.", "HE HEARS THEIR *FOOTSTEPS* AS THEY LEAVE"]], ["questions", "", ["PHASE 3: *THREE QUESTIONS*", "WHO IS YOUR *LORD*?", "WHAT IS YOUR *RELIGION*?", "WHO IS THIS MAN *SENT AMONG YOU*?", "MY LORD IS *ALLAH*. MY RELIGION IS *ISLAM*. HE IS THE *MESSENGER OF ALLAH* ﷺ.", "THE OTHER SAYS: \"*I DO NOT KNOW*\""]], ["seat", "", ["PHASE 4: HE IS *SHOWN HIS PLACE*", "FIRST, THE SEAT HE COULD HAVE HAD *IN THE FIRE*", "THEN: \"ALLAH GAVE YOU A SEAT *IN PARADISE*\""]], ["barzakh", "", ["PHASE 5: *BARZAKH*", "BETWEEN DEATH AND *RESURRECTION*", "SHOWN HIS PLACE *MORNING AND EVENING*", "HOW LONG? *ALLAH KNOWS BEST*."]], ["trumpet", "39:68", ["PHASE 6: *THE TRUMPET*", "ALL FALL, *EXCEPT WHOM ALLAH WILLS*", "BLOWN AGAIN: ALL *STANDING*, LOOKING ON"]], ["rising", "", ["PHASE 7: *THE RISING*", "OUT OF THE GRAVES, *RUSHING* TO THEIR LORD", "THE SUN DRAWN CLOSE. SWEAT, *BY DEEDS*."]], ["record", "", ["PHASE 8: THE *RECORD* AND THE *SCALE*", "\"HERE, *READ MY RECORD*!\"", "NO ONE WRONGED. EVEN A *MUSTARD SEED* IS WEIGHED."]], ["bridge", "", ["PHASE 9: *THE BRIDGE*", "A BRIDGE *OVER THE FIRE*", "SOME IN A *BLINK*. SOME LIKE *LIGHTNING*. SOME LIKE *WIND*.", "AND *SOME FALL*."]], ["paradise", "39:73", ["THE *LAST* PHASE", "LED TO PARADISE. ITS GATES *ALREADY OPEN*.", "\"*PEACE BE UPON YOU*. ENTER, FOREVER.\""]], ["close", "", ["THIS IS THE ROAD. BUILD IT *TODAY*.", "COMMENT: YA ALLAH, GRANT US *JANNAH* 🤲"]]]</script>
+<script src="lib.js"></script>
+<script src="vo/reel07-timing.js"></script>
+<script>
+// faith brand reel 07 (v3): every phase after death, in the visual language of the @islaminsketches reference it was
+// studied from: cream paper, serif caps, wide flat scenes that change on every beat. Urdu voice, English caption lines.
+// No angel or human figures: angels and souls are light; the rest are objects and places.
+// Sources: Quran 32:11, 39:68, 36:51, 69:19, 21:47, 39:73; Bukhari 1338, 1374, 1379; Abu Dawud 4753 (sahih); Muslim 183, 2864.
+const T = window.TIMES, CAPS = window.CAPS;
+window.DURATION = T[T.length - 1];
+const HANDLE = "@yourbrand";
+const SC = JSON.parse(document.getElementById("sc").textContent);
+const BEATS = SC.map((x) => x[2].length);
+const FIRST = BEATS.map((_, i) => BEATS.slice(0, i).reduce((a, b) => a + b, 0));
+const bs = (s, k) => CAPS[FIRST[s] + k][0];
+const beatAt = (s, abs) => { let k = 0; while (k + 1 < BEATS[s] && abs >= bs(s, k + 1)) k++; return k; };
+const f1 = (x) => (+x).toFixed(1), S = Math.sin, C = Math.cos, TAU = Math.PI * 2, W = 1080, H = 1920;
+const md = (s) => s.replace(/\*(.+?)\*/g, "<b>$1</b>");
+const AL = (s) => s.replace(/\bALLAH\b/g, `<span class="al">اللّٰه</span>`).replace(/ﷺ/g, `<span style="unicode-bidi:isolate">ﷺ</span>`);
+const INK = "#3B2F22", SAGE = "#A9BE8A", TAN = "#DCC9A3", WH = "#FBF7EE", GF = "#E2B94A", BLU = "#A9BFCC", TER = "#D98C6A", CR = "#F2E8D5";
+const SW = `stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"`;
+const SWD = `stroke="${CR}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"`;
+const glow = (x, y, r, o = 1) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#gl)" opacity="${f1(Math.max(0, o))}"/>`;
+const IN = (abs, s, k, d = 0.5) => E.out(Math.max(0, Math.min(1, (abs - bs(s, k)) / d)));
+const ground = `<path d="M10 214 H290" ${SW} opacity=".35"/>`;
+const flame = (x, y, sc = 1, t = 0, k = 0) => `<g transform="translate(${x} ${y}) scale(${f1(sc * (1 + 0.06 * S(t * 9 + k)))})"><path d="M0 0 C-10 -2 -12 -14 -6 -22 C-5 -16 -1 -15 0 -17 C-2 -24 2 -30 7 -34 C6 -24 12 -20 11 -11 C10 -4 6 0 0 0 Z" fill="${TER}" ${SW} stroke-width="2"/><path d="M0 -1 C-4 -2 -5 -7 -2 -11 C-1 -8 1 -8 2 -9 C3 -6 4 -3 0 -1 Z" fill="${GF}"/></g>`;
+const stone = (x, rot = 0, base = 210) => `<g transform="rotate(${f1(rot)} ${x} ${base})"><path d="M${x - 9} ${base} V${base - 34} Q${x} ${base - 44} ${x + 9} ${base - 34} V${base} Z" fill="${TAN}" ${SW}/></g>`;
+const mound = (x, w = 46, base = 212) => `<path d="M${x - w / 2} ${base} Q${x} ${base - 22} ${x + w / 2} ${base} Z" fill="#B99B72" ${SW}/>`;
+const stars = (n, seed, y1 = 200, col = INK, o = 0.35) => Array.from({ length: n }, (_, k) => { const r = (m) => Math.abs((S((k + seed) * 12.9898 + m * 78.233) * 43758.5453) % 1); return `<circle cx="${f1(10 + r(1) * 280)}" cy="${f1(10 + r(2) * y1)}" r="${f1(0.8 + r(3) * 1.6)}" fill="${col}" opacity="${o}"/>`; }).join("");
+const dot = (x, y, r = 4, o = 1) => `${glow(x, y, r * 4, o * 0.8)}<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="#FFF3D6" opacity="${f1(o)}"/>`;
+
+// ---------- scenes: D[s](abs, t, s) -> svg, 300x250 ----------
+const D = {
+  // Hook: a grave under a crescent moon; footprints appear one by one, walking away.
+  0: (a, t) => `${stars(26, 3, 120, CR, 0.6)}<path d="M228 34 A22 22 0 1 0 250 70 A17 17 0 1 1 228 34 Z" fill="#F4E4BF"/>${glow(240, 52, 50, 0.5)}
+    <path d="M-100 222 Q120 206 400 216 V700 H-100 Z" fill="#0B1428"/>${mound(70, 74, 216).replace(/#B99B72/, "#8A7458")}<path d="M60 206 V160 Q70 148 80 160 V206" fill="#D9CCB2" stroke="#0B1428" stroke-width="2.5"/>
+    ${Array.from({ length: 9 }, (_, k) => { const x = 112 + k * 20, y = 214 + (k % 2 ? 4 : -2), o = Math.min(1, Math.max(0, (t - 0.1 - k * 0.32) / 0.15)) * (1 - 0.5 * Math.min(1, Math.max(0, (t - 1 - k * 0.32) / 1.6))); return `<g transform="translate(${x} ${y}) rotate(80)" opacity="${f1(o)}"><ellipse rx="3" ry="5" fill="${CR}"/><circle cy="-6" r="1.8" fill="${CR}"/></g>`; }).join("")}`,
+  // 1. The soul: light rises from the shroud.
+  1: (a, t, s) => { const b = beatAt(s, a), up = b >= 1 ? IN(a, s, 1, 2.2) : 0, y = 150 - 120 * up;
+    return `${ground}<path d="M50 188 H250 M62 188 V212 M238 188 V212" ${SW}/><path d="M70 176 Q70 160 86 160 H214 Q230 160 230 176 Q230 188 214 188 H86 Q70 188 70 176 Z" fill="${WH}" ${SW}/><path d="M104 160 V188 M150 160 V188 M196 160 V188" ${SW} opacity=".5"/>
+      ${up ? `<path d="M150 158 V${f1(y + 10)}" stroke="${GF}" stroke-width="2" stroke-dasharray="3 6" opacity=".6"/>` : ""}${dot(150, b >= 1 ? y : 150 + 2 * S(t * 2), 7, 1)}`; },
+  // 2. The grave: the pit, the shroud lowered, the mound; then footprints leave.
+  2: (a, t, s) => { const b = beatAt(s, a), low = b >= 1 ? IN(a, s, 1, 1.4) : 0, fill = b >= 2 ? 1 : Math.max(0, (low - 0.7) / 0.3), lv = b >= 2 ? (a - bs(s, 2)) : -1;
+    return `<path d="M10 170 H110 M190 170 H290" ${SW} opacity=".4"/><rect x="110" y="170" width="80" height="50" fill="#8A7458" ${SW} opacity="${f1(1 - fill)}"/>
+      ${b >= 1 && fill < 1 ? `<path d="M118 ${f1(130 + 60 * low)} Q118 ${f1(122 + 60 * low)} 128 ${f1(122 + 60 * low)} H172 Q182 ${f1(122 + 60 * low)} 182 ${f1(130 + 60 * low)} Q182 ${f1(138 + 60 * low)} 172 ${f1(138 + 60 * low)} H128 Q118 ${f1(138 + 60 * low)} 118 ${f1(130 + 60 * low)} Z" fill="${WH}" ${SW}/>` : ""}
+      <g opacity="${f1(fill)}"><path d="M100 172 Q150 140 200 172 Z" fill="#B99B72" ${SW}/><path d="M142 158 V122 Q150 112 158 122 V158" fill="${TAN}" ${SW}/></g>
+      ${lv >= 0 ? Array.from({ length: 7 }, (_, k) => { const o = Math.min(1, Math.max(0, (lv - k * 0.3) / 0.15)); return `<g transform="translate(${212 + k * 12} ${172 + (k % 2 ? 3 : -2)}) rotate(80)" opacity="${f1(o)}"><ellipse rx="2.4" ry="4" fill="${INK}"/><circle cy="-5" r="1.4" fill="${INK}"/></g>`; }).join("") + [0, 1, 2].map((k) => { const r = (lv * 28 + k * 16) % 48; return `<path d="M${f1(150 - r * 0.6)} ${f1(150 - r * 0.25)} Q150 ${f1(150 - r * 0.5)} ${f1(150 + r * 0.6)} ${f1(150 - r * 0.25)}" fill="none" stroke="${GF}" stroke-width="2" opacity="${f1(1 - r / 48)}"/>`; }).join("") : ""}`; },
+  // 3. The questions: the chamber, two lights, then the three questions and the answers.
+  3: (a, t, s) => { const b = beatAt(s, a), ans = b >= 4 ? IN(a, s, 4, 0.6) : 0, no = b >= 5 ? IN(a, s, 5, 0.5) : 0;
+    const Q = [["WHO IS YOUR LORD?", "MY LORD IS ALLAH"], ["WHAT IS YOUR RELIGION?", "MY RELIGION IS ISLAM"], ["WHO IS THIS MAN?", "THE MESSENGER OF ALLAH ﷺ"]];
+    return `${Q.map(([q, an], k) => { const on = b >= k + 1 ? IN(a, s, k + 1, 0.35) : 0; return `<text x="150" y="${30 + k * 44}" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="800" font-size="15" fill="${INK}" opacity="${f1(on)}">${q}</text><text x="150" y="${48 + k * 44}" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="700" font-size="12.5" fill="#A8781C" opacity="${f1(ans * (1 - 0.75 * no))}">${an}</text>`; }).join("")}
+      ${no ? `<text x="150" y="160" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="800" font-size="16" fill="#B5462E" opacity="${f1(no)}">"I DO NOT KNOW."</text>` : ""}
+      <rect x="70" y="172" width="160" height="58" rx="10" fill="#C9B48E" ${SW}/>${[100, 200].map((x, k) => `${glow(x, 188, 22, 0.9)}<circle cx="${x}" cy="188" r="5" fill="#FFF3D6"/>`).join("")}`; },
+  // 4. Shown his place: two windows; the fire, then the garden instead.
+  4: (a, t, s) => { const b = beatAt(s, a), L = b >= 1 ? IN(a, s, 1, 0.6) * (b >= 2 ? 1 - IN(a, s, 2, 0.6) : 1) : 0, R = b >= 2 ? IN(a, s, 2, 0.8) : 0;
+    const win = (x, open, inside) => `<path d="M${x - 34} 210 V110 A34 34 0 0 1 ${x + 34} 110 V210 Z" fill="#8A7458" ${SW}/><g opacity="${f1(open)}">${inside}</g><path d="M${x - 34} 210 V110 A34 34 0 0 1 ${x + 34} 110 V210 Z" fill="none" ${SW}/>`;
+    return `${ground}${win(90, L, `${glow(90, 170, 40, 0.8)}${[70, 90, 110].map((x, k) => flame(x, 206, 1.2, t, k)).join("")}`)}${win(210, R, `<path d="M176 210 V110 A34 34 0 0 1 244 110 V210 Z" fill="#E8F0D8"/>${glow(210, 140, 46, 0.9)}${[188, 210, 232].map((x) => `<path d="M${x} 208 V184 M${x} 196 C${x - 8} 192 ${x - 10} 184 ${x - 6} 180" fill="none" stroke="#5E8C4A" stroke-width="3" stroke-linecap="round"/>`).join("")}`)}`; },
+  // 5. Barzakh (navy): the barrier between death and resurrection; souls wait; morning and evening; how long?
+  5: (a, t, s) => { const b = beatAt(s, a), souls = b >= 1 ? IN(a, s, 1, 0.8) : 0, cyc = b >= 2 ? IN(a, s, 2, 0.5) : 0, q = b >= 3 ? IN(a, s, 3, 0.5) : 0, ang = (a - bs(s, 0)) * 1.4;
+    return `${stars(40, 9, 230, CR, 0.5)}<rect x="142" y="24" width="16" height="196" fill="none" stroke="${GF}" stroke-width="2.5"/>${[0, 1, 2, 3, 4, 5, 6].map((k) => `<path d="M142 ${50 + k * 26} H158" stroke="${GF}" stroke-width="1.5" opacity=".6"/>`).join("")}
+      <text x="70" y="40" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="700" font-size="11" letter-spacing="2" fill="${CR}">DEATH</text><text x="230" y="40" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="700" font-size="11" letter-spacing="2" fill="${CR}">RESURRECTION</text>
+      ${souls ? [[60, 90], [96, 120], [70, 150], [110, 170], [44, 130], [120, 92]].map(([x, y], k) => dot(x, y + 3 * S(t * 2 + k), 3.4, souls * (0.7 + 0.3 * S(t * 3 + k)))).join("") : ""}
+      ${cyc ? `<g opacity="${f1(cyc * (1 - q))}"><circle cx="${f1(230 + 34 * C(ang))}" cy="${f1(150 + 34 * S(ang))}" r="9" fill="${GF}"/><path d="M${f1(230 - 34 * C(ang) - 6)} ${f1(150 - 34 * S(ang) - 8)} A10 10 0 1 0 ${f1(230 - 34 * C(ang) + 4)} ${f1(150 - 34 * S(ang) + 8)} A8 8 0 1 1 ${f1(230 - 34 * C(ang) - 6)} ${f1(150 - 34 * S(ang) - 8)} Z" fill="${CR}"/></g>` : ""}
+      ${q ? `<g opacity="${f1(q)}"><circle cx="230" cy="150" r="30" fill="none" ${SWD}/><path d="M230 150 V130 M230 150 L${f1(230 + 16 * C(t))} ${f1(150 + 16 * S(t))}" ${SWD}/><text x="230" y="200" text-anchor="middle" font-family="'Source Serif 4', serif" font-weight="800" font-size="18" fill="${GF}">?</text></g>` : ""}`; },
+  // 6. The trumpet: blown, the standing stones fall; blown again, they stand.
+  6: (a, t, s) => { const b = beatAt(s, a), fall = b >= 1 ? IN(a, s, 1, 1.0) : 0, rise = b >= 2 ? IN(a, s, 2, 1.0) : 0, tilt = 80 * fall * (1 - rise), blowA = b >= 1 ? a - bs(s, b >= 2 ? 2 : 1) : -1;
+    return `${ground}<path d="M40 80 Q90 76 130 34 L144 46 Q104 86 46 96 Z" fill="${GF}" ${SW}/>${blowA >= 0 ? [0, 1, 2].map((k) => { const r = (blowA * 40 + k * 18) % 60; return `<path d="M${f1(146 + r * 0.4)} ${f1(30 - r * 0.2)} A${f1(10 + r)} ${f1(10 + r)} 0 0 1 ${f1(160 + r * 0.6)} ${f1(52 + r * 0.3)}" fill="none" stroke="#B5462E" stroke-width="2.5" opacity="${f1(1 - r / 60)}"/>`; }).join("") : ""}
+      ${[60, 92, 124, 156, 188, 220, 252].map((x, k) => stone(x, tilt * (k % 2 ? 1 : -1) * 0.95)).join("")}${rise ? glow(156, 180, 80, rise * 0.7) : ""}`; },
+  // 7. The rising: from the graves, lights rush up; the sun drawn close.
+  7: (a, t, s) => { const b = beatAt(s, a), up = b >= 1 ? a - bs(s, 1) : -1, sun = b >= 2 ? IN(a, s, 2, 1.2) : 0;
+    return `${ground}${[50, 100, 150, 200, 250].map((x) => mound(x, 40)).join("")}
+      ${up >= 0 ? [50, 100, 150, 200, 250].map((x, k) => { const p = ((up * 0.55 + k * 0.17) % 1); return dot(x + 6 * S(up * 3 + k), 200 - 170 * p, 3.2, (1 - p) * (1 - 0.7 * sun)); }).join("") : ""}
+      ${sun ? `${glow(150, f1(110 - 40 * (1 - sun)), 110, sun)}<circle cx="150" cy="${f1(110 - 40 * (1 - sun))}" r="${f1(26 + 14 * sun)}" fill="#F07A1E" ${SW}/>${[100, 130, 170, 200].map((x, k) => `<path d="M${x} ${f1(((t * 60 + k * 23) % 40) + 160)} q-3 6 0 8 q3 -2 0 -8 Z" fill="#5B9BD5"/>`).join("")}` : ""}`; },
+  // 8. The record and the scale.
+  8: (a, t, s) => { const b = beatAt(s, a), open = b >= 1 ? IN(a, s, 1, 0.6) : 0, sc = b >= 2 ? IN(a, s, 2, 0.6) : 0, tip = sc ? 6 * S(Math.min(1, (a - bs(s, 2)) / 1.5) * Math.PI / 2) : 0;
+    return `${ground}<g opacity="${f1(1 - sc)}" transform="translate(150 150)">${glow(0, 0, 70, open)}${open < 0.5 ? `<rect x="-36" y="-46" width="72" height="92" rx="4" fill="${TAN}" ${SW}/><path d="M-26 -46 V46" ${SW}/>` : `<path d="M0 -40 C-18 -48 -44 -48 -62 -40 V40 C-44 32 -18 32 0 40 Z M0 -40 C18 -48 44 -48 62 -40 V40 C44 32 18 32 0 40 Z" fill="${WH}" ${SW}/>${[0, 1, 2].map((k) => `<path d="M-52 ${-22 + k * 14} H-12 M12 ${-22 + k * 14} H52" ${SW} opacity=".4"/>`).join("")}<path d="M18 22 L28 30 L46 12" stroke="#5E8C4A" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`}</g>
+      ${sc ? `<g opacity="${f1(sc)}">${glow(150, 110, 70)}<path d="M150 212 V70 M126 212 H174" ${SW}/><g transform="rotate(${f1(-tip)} 150 70)"><path d="M90 70 H210" ${SW}/><path d="M96 70 L84 120 M96 70 L108 120 M204 70 L192 120 M204 70 L216 120" ${SW} opacity=".7"/><path d="M78 120 Q96 134 114 120 Z M186 120 Q204 134 222 120 Z" fill="${GF}" ${SW}/><circle cx="96" cy="118" r="2.6" fill="${INK}"/></g></g>` : ""}`; },
+  // 9. The bridge over the fire: lights cross at different speeds; one falls.
+  9: (a, t, s) => { const b = beatAt(s, a), br = b >= 1 ? IN(a, s, 1, 0.8) : 0, cr = b >= 2 ? a - bs(s, 2) : -1, fl = b >= 3 ? a - bs(s, 3) : -1;
+    const by = (x) => 120 - 34 * S(Math.PI * (x - 20) / 260);
+    return `${[30, 60, 90, 120, 150, 180, 210, 240, 270].map((x, k) => flame(x, 222, 1.5, t, k)).join("")}${glow(150, 220, 120, 0.5)}
+      ${br ? `<path d="M20 120 Q150 52 280 120" fill="none" ${SW} stroke-dasharray="${f1(400 * br)} 400"/><path d="M14 122 H26 M274 122 H286" ${SW}/>` : ""}
+      ${cr >= 0 ? [[2.2, 0], [1.2, 0.25], [0.7, 0.5]].map(([sp, ph]) => { const p = ((cr * sp * 0.45 + ph) % 1), x = 20 + 260 * p; return `<path d="M${f1(x - 26 * sp)} ${f1(by(x - 26 * sp) - 6)} L${f1(x)} ${f1(by(x) - 6)}" stroke="#FFF3D6" stroke-width="2" opacity=".5"/>${dot(x, by(x) - 6, 3.4)}`; }).join("") : ""}
+      ${fl >= 0 ? (() => { const p = Math.min(1, fl / 1.2); return dot(150 + 10 * p, by(150) - 6 + 110 * p * p, 3.4, 1 - p * 0.8); })() : ""}`; },
+  // 10. Paradise: the gates open, greenery, lights enter.
+  10: (a, t, s) => { const b = beatAt(s, a), op = b >= 1 ? IN(a, s, 1, 1.0) : 0, inn = b >= 2 ? a - bs(s, 2) : -1;
+    return `${ground}${glow(150, 130, 120, 0.4 + 0.6 * op)}<path d="M80 212 V96 A70 70 0 0 1 220 96 V212 Z" fill="#FFF6D8" ${SW}/>
+      <path d="M80 212 V96 A70 70 0 0 1 ${f1(150 - 62 * op)} 30 V212 Z" fill="#9CC28A" ${SW} opacity="${f1(1 - 0.85 * op)}"/><path d="M220 212 V96 A70 70 0 0 0 ${f1(150 + 62 * op)} 30 V212 Z" fill="#9CC28A" ${SW} opacity="${f1(1 - 0.85 * op)}"/>
+      ${op ? [40, 60, 240, 260].map((x, k) => `<path d="M${x} 212 V${f1(212 - 30 * op)} M${x} ${f1(212 - 18 * op)} C${x - 10} ${f1(206 - 18 * op)} ${x - 12} ${f1(198 - 18 * op)} ${x - 8} ${f1(192 - 18 * op)}" fill="none" stroke="#5E8C4A" stroke-width="3" stroke-linecap="round"/>`).join("") : ""}
+      ${inn >= 0 ? Array.from({ length: 8 }, (_, k) => { const p = ((inn * 0.4 + k / 8) % 1); return dot(150 + (k % 3 - 1) * 14, 236 - 90 * p, 3, (1 - p)); }).join("") : ""}`; },
+  // Close: the heartbeat, still beating.
+  11: (a, t) => { let d = "M10 130"; for (let x = 10; x <= 290; x += 2) { const ph = ((x / 280) - t * 0.6) % 1, q = ((ph % 1) + 1) % 1; const y = q > 0.45 && q < 0.5 ? 130 - 60 * S((q - 0.45) / 0.05 * Math.PI) : q > 0.5 && q < 0.54 ? 130 + 30 * S((q - 0.5) / 0.04 * Math.PI) : 130; d += ` L${x} ${f1(y)}`; } return `${glow(150, 130, 80, 0.5)}<path d="${d}" fill="none" stroke="#B5462E" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`; },
+};
+
+// ---------- backdrop + shared gradient ----------
+scene(0, window.DURATION, () => `<div class="bgc abs" style="width:${W}px;height:${H}px"></div>
+  <div class="grid abs" style="width:${W}px;height:${H}px;background:linear-gradient(rgba(120,100,60,.07) 2px,transparent 2px) 0 0/48px 48px,linear-gradient(90deg,rgba(120,100,60,.07) 2px,transparent 2px) 0 0/48px 48px"></div>
+  <div class="abs" style="width:${W}px;height:${H}px;background:radial-gradient(ellipse at 50% 40%,rgba(255,250,235,.35),rgba(0,0,0,0) 55%,rgba(60,40,20,.14) 100%)"></div>
+  <svg width="0" height="0" style="position:absolute"><defs><radialGradient id="gl"><stop offset="0" stop-color="#F6D37A" stop-opacity=".75"/><stop offset="1" stop-color="#F6D37A" stop-opacity="0"/></radialGradient></defs></svg>`,
+  (e, t) => { let s = 0; while (s + 1 < 12 && t >= T[s + 1]) s++; const dk = s === 0 || s === 5 || t >= T[12]; $(e, ".bgc").style.background = dk ? "#14223D" : "#EEE6D1"; $(e, ".grid").style.opacity = dk ? 0.35 : 1; }, 0);
+
+// ---------- shots ----------
+const TR = 0.3;
+function shot(i, html, dk = false) {
+  const a = T[i], b = T[i + 1];
+  scene(a, b + TR, () => `<div class="cam ${dk ? "dk" : ""}">${html}<svg class="art" viewBox="0 0 300 250"><g class="ill"></g></svg><div class="beat"></div></div>`, (e, t, abs) => {
+    const d = b + TR - a, inn = i === 0 ? 1 : pr(t, 0, TR, E.out), out = pr(t, d - TR, d, E.in);
+    e.style.opacity = inn * (1 - out); $(e, ".cam").style.transform = `scale(${(mix(1.03, 1, inn) * mix(1, 0.985, out)).toFixed(4)})`;
+    $(e, ".ill").innerHTML = D[i](abs, t, i);
+    const k = beatAt(i, abs), bt = $(e, ".beat"), txt = (BEATS_TEXT[i] || [])[k] || "";
+    if (bt.dataset.k !== String(k)) { bt.innerHTML = AL(md(txt)); bt.dataset.k = k; }
+    const p = pr(abs, bs(i, k), bs(i, k) + 0.25, E.out); bt.style.opacity = p; bt.style.translate = `0 ${f1(mix(14, 0, p))}px`;
+    $$(e, ".hd").forEach((n, j) => (n.style.opacity = i === 0 ? 1 : pr(t, 0.05 * j, 0.05 * j + 0.3)));
+    const tt = $(e, ".ttl"), ar = $(e, ".arn"); if (tt && ar && !ar.dataset.p && tt.offsetHeight) { ar.style.top = `${tt.offsetTop + tt.offsetHeight + 4}px`; ar.dataset.p = 1; }
+  }, 2 + i);
+}
+// Beat lines under the art (the title carries beat 0; the questions are drawn in the art).
+const BEATS_TEXT = SC.map(([, , lines], s) => lines.map((l, k) => (s >= 1 && s <= 10 && k === 0) ? "" : l));
+BEATS_TEXT[3] = ["", "", "", "", "", BEATS_TEXT[3][5]];
+BEATS_TEXT[0][0] = ""; BEATS_TEXT[11][0] = "";
+const AR = { 1: "قَبْضُ الرُّوح", 2: "الْقَبْر", 3: "السُّؤَال", 4: "الْمَقْعَد", 5: "الْبَرْزَخ", 6: "الصُّور", 7: "الْبَعْث", 8: "الْكِتَاب وَالْمِيزَان", 9: "الصِّرَاط", 10: "الْجَنَّة" };
+const REF = { 1: "QURAN 32:11", 2: "SAHIH AL-BUKHARI 1338", 3: "SUNAN ABU DAWUD 4753 · SAHIH", 4: "SAHIH AL-BUKHARI 1374", 5: "SAHIH AL-BUKHARI 1379", 6: "QURAN 39:68", 7: "QURAN 36:51 · SAHIH MUSLIM 2864", 8: "QURAN 69:19 · 21:47", 9: "SAHIH MUSLIM 183", 10: "QURAN 39:73" };
+// Hook (navy night): title from frame 1, and the promise.
+shot(0, `<div class="lbl hd" style="top:250px">IN THE GRAVE</div><div class="ttl hd" style="top:300px;font-size:86px">THE LAST SOUND<br>IS THEIR <b>FOOTSTEPS</b></div>
+  <div class="hd" style="position:absolute;left:0;right:0;top:500px;text-align:center;font:italic 500 40px/1.2 'Source Serif 4',serif;color:#C9C0A8">walking away</div>`, true);
+for (let s = 1; s <= 10; s++) {
+  const t0 = SC[s][2][0], m = t0.match(/^(PHASE \d+):\s*(.*)$/), label = m ? m[1] : "THE LAST PHASE", title = m ? m[2] : "PARADISE";
+  shot(s, `<div class="lbl hd">${label}</div><div class="ttl hd">${md(title)}</div><div class="arn hd" style="top:${title.replace(/\*/g, "").length > 18 ? 520 : 445}px">${AR[s]}</div><div class="ref hd">${REF[s]}</div>`, s === 5);
+}
+shot(11, `<div class="lbl hd">THIS IS THE ROAD</div><div class="ttl hd">BUILD IT <b>TODAY</b></div><div class="hd" style="position:absolute;left:0;right:0;top:450px;text-align:center;font:italic 500 40px/1.2 'Source Serif 4',serif;color:#6B5B45">while the heart is still beating</div>`);
+scene(T[12], window.DURATION, () => `<div style="position:absolute;left:60px;right:60px;top:650px;text-align:center">
+    <div class="f1" style="font:800 84px/1.1 'Source Serif 4',serif;color:#F2E8D5">A reminder,<br><span style="color:#E8B45A">every day</span></div>
+    <div class="f2" style="margin-top:70px"><span class="btn" style="background:#E8B45A;color:#14223D">Follow</span></div>
+    <div class="f3" style="margin-top:40px;font:700 44px/1 'Source Serif 4',serif;color:#C9C0A8">${HANDLE}</div></div>`,
+  (e, t) => { e.style.opacity = pr(t, 0, 0.3); popIn(e, ".f1, .f2, .f3", t, [0.05, 0.3, 0.45], 0.85); }, 50);
+
+// Grain.
+(function fx() {
+  const fx = document.createElement("div"); fx.style.cssText = "position:absolute;inset:0;pointer-events:none;z-index:60";
+  fx.innerHTML = `<canvas width="270" height="480" style="position:absolute;inset:0;width:1080px;height:1920px;opacity:.05;mix-blend-mode:overlay"></canvas>`;
+  stage.appendChild(fx);
+  const ctx = fx.querySelector("canvas").getContext("2d"), gi = ctx.createImageData(270, 480), inner = window.seek;
+  window.seek = (t) => { inner(t); let s = Math.floor(t * 30) * 9301 + 49297; const r = () => ((s = (s * 9301 + 49297) % 233280) / 233280); for (let i = 0; i < gi.data.length; i += 4) { const v = r() * 255; gi.data[i] = gi.data[i + 1] = gi.data[i + 2] = v; gi.data[i + 3] = 255; } ctx.putImageData(gi, 0, 0); };
+})();
+</script>
+</body></html>
