@@ -1,0 +1,9 @@
+{
+  "name": "social-studio",
+  "owner": { "name": "Saif-09" },
+  "metadata": { "description": "Social Studio: reels, Shorts and carousels for any brand, made by chatting with Claude.", "version": "1.20261117.0" },
+  "plugins": [
+    { "name": "social-studio", "source": "./", "description": "Make reels, Shorts and carousels for any brand by chatting with Claude.", "version": "1.20261117.0",
+      "author": { "name": "Saif-09" }, "keywords": ["reels", "instagram", "video", "social-media"], "category": "productivity" }
+  ]
+}

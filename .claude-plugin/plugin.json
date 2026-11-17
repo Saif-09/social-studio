@@ -1,0 +1,10 @@
+{
+  "name": "social-studio",
+  "description": "Make Instagram reels, YouTube Shorts and carousels for any brand by chatting: hooks, script, voiceover, animated scenes, captions, render. Learns from your feedback.",
+  "version": "1.20261117.0",
+  "author": { "name": "Saif-09", "url": "https://github.com/Saif-09" },
+  "homepage": "https://github.com/Saif-09/social-studio",
+  "license": "MIT",
+  "keywords": ["reels", "instagram", "youtube-shorts", "video", "carousel", "social-media", "marketing"],
+  "skills": ["./skills/social-studio"]
+}

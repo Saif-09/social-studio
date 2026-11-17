@@ -1,49 +1,52 @@
 # Social Studio
 
-A Claude Code skill that makes short vertical videos (Instagram/FB reels, YouTube Shorts, TikTok) and carousels for any brand:
-hooks, scripts, voiceover (Gemini TTS), image prompts, HTML-animated scenes rendered with Playwright, big captions, muxing,
-posting captions, and reading Instagram stats. It learns: corrections go into `LEARNINGS.md`, stats into `PERFORMANCE.md`.
+Make Instagram reels, YouTube Shorts and carousels for your brand just by chatting with Claude.
+You say "make a reel about ___"; Claude writes the hook and script, records the voiceover, animates the scenes, adds big
+captions, renders the video and gives you the caption to post. It remembers your feedback, so every reel gets better.
 
-## Install (Mac)
-```bash
-git clone https://github.com/Saif-09/social-studio ~/.claude/skills/social-studio      # or unzip it there
-cd ~/.claude/skills/social-studio && ./setup.sh ~/Desktop/mybrand-reels
+## Install (2 minutes, no coding)
+
+You need **Claude Code** (the Claude app for your computer: claude.com/claude-code). Open it and type these two lines,
+one at a time:
+
 ```
-`setup.sh` checks the tools (Node, Python 3, uv, ffmpeg, Chrome), installs the engine and makes your first workspace.
-Then open Claude Code anywhere and say "make a reel for <brand> about <topic>", or type `/social-studio`.
-First time, it asks for your brand (site, audience, language, look, rules) and writes `brands/<name>.md` from `_template.md`.
-
-## Windows
-Use WSL (Ubuntu): `wsl --install` in PowerShell, open Ubuntu, then:
-```bash
-sudo apt update && sudo apt install -y nodejs npm ffmpeg python3 git
-curl -LsSf https://astral.sh/uv/install.sh | sh
-npm i -g @anthropic-ai/claude-code
-git clone https://github.com/Saif-09/social-studio ~/.claude/skills/social-studio && cd ~/.claude/skills/social-studio && ./setup.sh
+/plugin marketplace add Saif-09/social-studio
+/plugin install social-studio@social-studio
 ```
 
-## claude.ai
-Zip the folder and upload it under Settings → Capabilities → Skills. There it works as the playbook (formats, hooks, prompts,
-captions); rendering needs Claude Code on a computer.
+Then just say:
 
-## Your keys (stay on your machine, never in git)
-- Gemini key (voice, free tier is enough to start): get one at aistudio.google.com/apikey and save it to
-  `~/.config/reel-studio/gemini-key` (or set `GEMINI_API_KEY`). Free tier: about 10 voice requests per day per model.
-- Meta token (Instagram stats, optional): `~/.config/reel-studio/meta-token` (or `META_TOKEN`), plus `IG_ID` and `PAGE_ID`
-  env for your account. Graph API Explorer → Generate Access Token (instagram_basic, instagram_manage_insights,
-  pages_show_list, pages_read_engagement) → Access Token Debugger → Extend.
+```
+set up social studio
+```
 
-## What's inside
-| Path | What |
-|---|---|
-| `SKILL.md` | Workflow Claude follows |
-| `LEARNINGS.md` | Lessons that apply to every brand; yours get added here |
-| `brands/_template.md` | Copy per brand |
-| `references/` | Pipeline, winning formats, tools, gotchas, image prompts, posting |
-| `engine/`, `scripts/`, `templates/` | Renderer, voice, timing, captions, mux, page templates |
+Claude installs what it needs and asks you for one free key (it shows you how to get it, about 1 minute with a Google
+account). After that, ask for anything:
 
-`engine/reel05.html` (tier list) and `engine/reel20.html` (12→1 ranking) are example generators; they expect your own art in
-the workspace `art/` folder (`art/rashi/<name>.webp` for the ranking faces).
+- "Make a reel for my bakery about 3 cakes for Diwali"
+- "Make a 12→1 ranking reel: which zodiac sign is the most stubborn?"
+- "Copy the style of this reel: <instagram link>"
+- "Make a 6-slide carousel about tips for first-time home buyers"
+
+Your videos land in the `social-studio` folder in your home folder.
+
+**Windows:** install WSL first (open PowerShell, type `wsl --install`, restart), then run Claude Code inside Ubuntu and follow
+the same steps.
+
+**Update later:** type `/plugin` → Marketplaces → social-studio → Update.
+
+## Only use claude.ai (no Claude Code)?
+Download `social-studio.zip` from the [latest release](../../releases/latest) and upload it in claude.ai under
+Settings → Capabilities → Skills. There it helps with ideas, hooks, scripts, image prompts and captions; making the actual
+video needs Claude Code on a computer.
+
+## What it costs
+The skill is free. Voiceover uses Google's Gemini free tier (about 10 voice requests per day per voice model, enough for a
+reel or two a day). Claude Code needs a Claude plan.
+
+## For developers
+The skill lives in `skills/social-studio/` (`SKILL.md`, `engine/` renderer, `scripts/`, `templates/`, `references/`).
+Your own brands, lessons and stats are kept in `~/social-studio/`, so updates never overwrite them.
 
 ## License
 MIT, see `LICENSE`.
